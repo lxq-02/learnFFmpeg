@@ -10,6 +10,9 @@
 *.dll
 *.dylib
 
+# 忽略名为 build 的文件夹
+build/
+
 # Qt-es
 object_script.*.Release
 object_script.*.Debug
