@@ -6,9 +6,10 @@
 *.la
 *.lai
 *.so
-*.so.*
 *.dll
+*.so.*
 *.dylib
+*.vs
 
 # 忽略名为 build 的文件夹
 build/
