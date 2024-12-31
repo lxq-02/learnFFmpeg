@@ -2,7 +2,7 @@
 <Project>
   <ProjectOutputs>
     <ProjectOutput>
-      <FullPath>G:\learnFFmpeg\03_record_audio\x64\Debug\03_record_audio.exe</FullPath>
+      <FullPath>D:\PractiseData\ffmpeg\03_record_audio\x64\Debug\03_record_audio.exe</FullPath>
     </ProjectOutput>
   </ProjectOutputs>
   <ContentFiles />

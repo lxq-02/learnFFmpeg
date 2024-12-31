@@ -12,6 +12,9 @@
 
 # 忽略名为 build 的文件夹
 build/
+Debug/
+Release/
+x64/
 
 # Qt-es
 object_script.*.Release
