@@ -1,11 +1,3 @@
-#ifdef _MSC_VER
-// MSVC编译器环境下的代码
-#define _T(str) QString::fromLocal8Bit(str)
-#elif __GNUC__
-// MinGW编译器环境下的代码
-#define _T(str) QString(str)
-#endif
-
 #include "MainWindow.h"
 #include <qDebug>
 
@@ -46,8 +38,8 @@ void MainWindow::on_audioButton_clicked()
     ctx = avformat_alloc_context();
 
     // 使用QStringLiteral来处理字符串
-    //QString deviceName = QStringLiteral("audio=立体声混音 (Realtek(R) Audio)");
-    QString deviceName = QStringLiteral("audio=麦克风阵列 (2- Realtek(R) Audio)");
+    QString deviceName = QStringLiteral("audio=立体声混音 (Realtek(R) Audio)");
+    //QString deviceName = QStringLiteral("audio=麦克风阵列 (2- Realtek(R) Audio)");
 
     // 直接使用UTF-8编码转换为const char*，确保兼容性
     QByteArray deviceNameUtf8 = deviceName.toUtf8();

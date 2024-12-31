@@ -3,12 +3,12 @@
   "WorkspaceRootPath": "G:\\learnFFmpeg\\03_record_audio\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{3EE90095-10E3-4F6F-827B-CDCB7E9C7DB8}|03_record_audio\\03_record_audio.vcxproj|G:\\learnFFmpeg\\03_record_audio\\03_record_audio\\MainWindow.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
-      "RelativeMoniker": "D:0:0:{3EE90095-10E3-4F6F-827B-CDCB7E9C7DB8}|03_record_audio\\03_record_audio.vcxproj|solutionrelative:03_record_audio\\MainWindow.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{3EE90095-10E3-4F6F-827B-CDCB7E9C7DB8}|03_record_audio\\03_record_audio.vcxproj|G:\\learnFFmpeg\\03_record_audio\\03_record_audio\\main.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
       "RelativeMoniker": "D:0:0:{3EE90095-10E3-4F6F-827B-CDCB7E9C7DB8}|03_record_audio\\03_record_audio.vcxproj|solutionrelative:03_record_audio\\main.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{3EE90095-10E3-4F6F-827B-CDCB7E9C7DB8}|03_record_audio\\03_record_audio.vcxproj|G:\\learnFFmpeg\\03_record_audio\\03_record_audio\\MainWindow.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{3EE90095-10E3-4F6F-827B-CDCB7E9C7DB8}|03_record_audio\\03_record_audio.vcxproj|solutionrelative:03_record_audio\\MainWindow.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{3EE90095-10E3-4F6F-827B-CDCB7E9C7DB8}|03_record_audio\\03_record_audio.vcxproj|G:\\learnFFmpeg\\03_record_audio\\03_record_audio\\MainWindow.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
@@ -22,7 +22,7 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 8,
+          "SelectedChildIndex": 7,
           "Children": [
             {
               "$type": "Bookmark",
@@ -56,33 +56,33 @@
               "RelativeDocumentMoniker": "03_record_audio\\MainWindow.h",
               "ToolTip": "G:\\learnFFmpeg\\03_record_audio\\03_record_audio\\MainWindow.h",
               "RelativeToolTip": "03_record_audio\\MainWindow.h",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA8AAAAIAAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAYAAAABAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
               "WhenOpened": "2024-12-31T02:43:50.216Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 0,
               "Title": "main.cpp",
               "DocumentMoniker": "G:\\learnFFmpeg\\03_record_audio\\03_record_audio\\main.cpp",
               "RelativeDocumentMoniker": "03_record_audio\\main.cpp",
               "ToolTip": "G:\\learnFFmpeg\\03_record_audio\\03_record_audio\\main.cpp",
               "RelativeToolTip": "03_record_audio\\main.cpp",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABMAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
               "WhenOpened": "2024-12-31T02:41:29.876Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 0,
+              "DocumentIndex": 1,
               "Title": "MainWindow.cpp",
               "DocumentMoniker": "G:\\learnFFmpeg\\03_record_audio\\03_record_audio\\MainWindow.cpp",
               "RelativeDocumentMoniker": "03_record_audio\\MainWindow.cpp",
               "ToolTip": "G:\\learnFFmpeg\\03_record_audio\\03_record_audio\\MainWindow.cpp",
               "RelativeToolTip": "03_record_audio\\MainWindow.cpp",
-              "ViewState": "AgIAACcAAAAAAAAAAAAAADsAAAASAAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAADwAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
               "WhenOpened": "2024-12-31T02:16:24.687Z",
               "EditorCaption": ""
