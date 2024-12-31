@@ -1,11 +1,3 @@
-
-#ifdef _MSC_VER
-    //MSVC编译器环境下的代码
-    #define _T(str) QString::fromLocal8Bit(str)
-#elif __GNUC__
-    //MinGW编译器环境下的代码
-    #define _T(str) QString(str)
-#endif
 QT       += core gui
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
