@@ -53,19 +53,10 @@ void MainWindow::on_audioButton_clicked()
 
     // 格式上下文（将来利用上下文操作设备
     AVFormatContext* ctx = nullptr;
-<<<<<<< HEAD
+
 #ifdef Q_OS_WIN
     //QString deviceName = QStringLiteral("audio=立体声混音 (Realtek(R) Audio)");
     QString deviceName = QStringLiteral("audio=麦克风阵列 (2- Realtek(R) Audio)");
-=======
-    ctx = avformat_alloc_context();
-
-    // 使用QStringLiteral来处理字符串
-    QString deviceName = QStringLiteral("audio=立体声混音 (Realtek(R) Audio)");
-    //QString deviceName = QStringLiteral("audio=麦克风阵列 (2- Realtek(R) Audio)");
-
-    // 直接使用UTF-8编码转换为const char*，确保兼容性
->>>>>>> 4b1c5ae92c266137deb90212ebd1146ff5e9a339
     QByteArray deviceNameUtf8 = deviceName.toUtf8();
     const char* audio = deviceNameUtf8.constData();
 #else
