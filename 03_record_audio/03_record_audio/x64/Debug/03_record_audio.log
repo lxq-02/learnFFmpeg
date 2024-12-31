@@ -1,0 +1,7 @@
+﻿   Qt/MSBuild: 3.3.1.1
+   Qt: 5.15.2
+  MainWindow.cpp
+G:\learnFFmpeg\include\libavutil\rational.h(1,1): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+  (编译源文件“MainWindow.cpp”)
+  
+  03_record_audio.vcxproj -> G:\learnFFmpeg\03_record_audio\x64\Debug\03_record_audio.exe
