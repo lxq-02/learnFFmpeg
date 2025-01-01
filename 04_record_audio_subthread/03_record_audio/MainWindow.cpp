@@ -19,6 +19,13 @@ void MainWindow::on_audioButton_clicked()
         _audioThread = new AudioThread(this);
         _audioThread->start();
 
+        connect(_audioThread, &AudioThread::finished,
+            [this]()    // 线程结束
+            {
+                _audioThread = nullptr;
+                ui.audioButton->setText(QStringLiteral("开始录音"));
+            });
+
         // 设置线程文字
         ui.audioButton->setText(QStringLiteral("结束录音"));
     }

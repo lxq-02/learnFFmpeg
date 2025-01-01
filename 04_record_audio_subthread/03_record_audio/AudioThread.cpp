@@ -1,6 +1,7 @@
 #include "AudioThread.h"
 #include <qDebug>
 #include <QFile>
+#include <QDateTime>
 
 extern "C" {
     // 设备相关API
@@ -17,10 +18,10 @@ extern "C" {
 // 格式名称
 #define FMT_NAME "dshow"
 // PCM文件名
-#define FILENAME "D:/out.pcm"
+#define FILEPATH "D:/"
 #else
 #define FMT_NAME "avfoundation"
-#define FILENAME "/Users/mj/Destop/out.pcm"
+#define FILEPATH "/Users/mj/Destop/"
 #endif // Q_OS_WIN
 
 AudioThread::AudioThread(QObject *parent)
@@ -71,13 +72,16 @@ void AudioThread::run()
     }
 
     // 文件名
-    QFile file(FILENAME);
+    QString filename = FILEPATH;
+    filename += QDateTime::currentDateTime().toString("MM_dd_HH_mm_ss");
+    filename += ".pcm";
+    QFile file(filename);
 
     // 打开文件
     // WriteOnly:只写模式。如果文件不存在，创建文件；如果文件存在，清空文件
     if (!file.open(QIODevice::WriteOnly))
     {
-        qDebug() << FILENAME << "文件打开失败";
+        qDebug() << filename << "文件打开失败";
 
         // 关闭设备
         avformat_close_input(&ctx);
@@ -86,18 +90,24 @@ void AudioThread::run()
 
     // 数据包
     AVPacket pkt;
-    // 不断采集数据
-    //while (!_stop && av_read_frame(ctx, &pkt) == 0)
-    //{
-    //    // 将数据写入文件
-    //    file.write((const char*)pkt.data, pkt.size);
-    //    qDebug() << "pkt size is :" << pkt.size;
-    //}
-    while (!isInterruptionRequested() && av_read_frame(ctx, &pkt) == 0)
+    while (!isInterruptionRequested())
     {
-        // 将数据写入文件
-        file.write((const char*)pkt.data, pkt.size);
-        qDebug() << "pkt size is :" << pkt.size;
+        // 不断采集数据
+        ret = av_read_frame(ctx, &pkt);
+
+        if (ret == 0)   // 读取成功
+        {
+            // 将数据写入文件
+            file.write((const char*)pkt.data, pkt.size);
+        }
+        else
+        {
+            // if (ret == AVERROR(EAGAIN))
+            char errbuf[1024];
+            av_strerror(ret, errbuf, sizeof(errbuf));
+            qDebug() << "av_read_frame error" << errbuf << ret;
+            break;
+        }
     }
 
 
@@ -113,6 +123,8 @@ void AudioThread::run()
 
 AudioThread::~AudioThread()
 {
+    // 断开所有连接
+    disconnect();  
     // 内存回收之前，正常结束线程
     requestInterruption();
     // 安全退出
