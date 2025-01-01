@@ -16,9 +16,15 @@ MmainWindow::~MmainWindow()
     delete ui;
 }
 
-void MmainWindow::on_playButton_clicked()
+void MmainWindow::showVersion()
 {
     SDL_version version;
     SDL_VERSION(&version);
     qDebug() << version.major << version.minor << version.patch;
+}
+
+void MmainWindow::on_playButton_clicked()
+{
+    _playThread = new playThread(this);
+    _playThread->start();
 }

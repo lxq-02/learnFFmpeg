@@ -101,11 +101,15 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="playThread.cpp" />
     <QtRcc Include="MmainWindow.qrc" />
     <QtUic Include="MmainWindow.ui" />
     <QtMoc Include="MmainWindow.h" />
     <ClCompile Include="MmainWindow.cpp" />
     <ClCompile Include="main.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <QtMoc Include="playThread.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Condition="Exists('$(QtMsBuild)\qt.targets')">

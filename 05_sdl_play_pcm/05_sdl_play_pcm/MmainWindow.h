@@ -2,6 +2,7 @@
 
 #include <QtWidgets/QMainWindow>
 #include "ui_MmainWindow.h"
+#include "playThread.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MmainWindowClass; };
@@ -15,8 +16,10 @@ public:
     MmainWindow(QWidget *parent = nullptr);
     ~MmainWindow();
 
+    void showVersion();
     void on_playButton_clicked();
 
 private:
     Ui::MmainWindowClass *ui;
+    playThread* _playThread = nullptr;
 };
