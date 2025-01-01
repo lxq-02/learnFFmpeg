@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.4.33103.184
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "05_sdl_play_pcm", "05_sdl_play_pcm\05_sdl_play_pcm.vcxproj", "{EBAAAE49-C3A8-4D12-B487-0DBF98BCABD8}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|x64 = Debug|x64
+		Release|x64 = Release|x64
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{EBAAAE49-C3A8-4D12-B487-0DBF98BCABD8}.Debug|x64.ActiveCfg = Debug|x64
+		{EBAAAE49-C3A8-4D12-B487-0DBF98BCABD8}.Debug|x64.Build.0 = Debug|x64
+		{EBAAAE49-C3A8-4D12-B487-0DBF98BCABD8}.Release|x64.ActiveCfg = Release|x64
+		{EBAAAE49-C3A8-4D12-B487-0DBF98BCABD8}.Release|x64.Build.0 = Release|x64
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {13BFC7F4-B8F7-4D42-A30B-F2787BDE679E}
+	EndGlobalSection
+EndGlobal
