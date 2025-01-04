@@ -4,14 +4,18 @@
 #include <QFile>
 
 #define FILENAME "D:/in.pcm"
+// 采样率
 #define SAMPLE_RATE 44100
+// 采样格式
 #define SAMPLE_FORMAT AUDIO_S16LSB
+// 采样大小
 #define SAMPLE_SIZE SDL_AUDIO_BITSIZE(SAMPLE_FORMAT)
+// 声道数
 #define CHANNELS 2
 // 音频缓冲区的样本数量
 #define SAMPLES 1024
 // 每个样本占用多少个字节
-#define BYTES_PER_SAMPLE ((SAMPLE_SIZE * CHANNELS) / 8)
+#define BYTES_PER_SAMPLE ((SAMPLE_SIZE * CHANNELS) >> 3)
 // 文件缓冲区的大小
 #define BUFFER_SIZE (SAMPLES * BYTES_PER_SAMPLE)
 
@@ -125,13 +129,13 @@ void playThread::run()
 
 
 		buffer.len = file.read((char*)data, BUFFER_SIZE);
+		// 文件数据已经读取完
 		if (buffer.len <= 0)
 		{
 			// 剩余的样本数量
 			int samples = buffer.pullLen / BYTES_PER_SAMPLE;
 			int ms = samples * 1000 / SAMPLE_RATE;
 			SDL_Delay(ms);
-			qDebug() << ms;
 			break;
 		}
 

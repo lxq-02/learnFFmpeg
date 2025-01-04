@@ -31,6 +31,26 @@ AudioThread::AudioThread(QObject *parent)
     connect(this, &AudioThread::finished, this, &AudioThread::deleteLater);
 }
 
+void showSpec(AVFormatContext* ctx)
+{
+    // 获取输入流
+    AVStream* stream = ctx->streams[0];
+    // 获取音频参数
+    AVCodecParameters* params = stream->codecpar;
+    // 声道数
+    qDebug() << params->channels;
+    // 采样率
+    qDebug() << params->sample_rate;
+    // 采样格式 大小端
+    qDebug() << params->format;
+    // 每一个样本占用多少个字节
+    qDebug() << "aaa:" << av_get_bytes_per_sample((AVSampleFormat)params->format);
+    //av_get_bytes_per_sample
+    // 声道数
+    qDebug() << params->channels;
+
+}
+
 // 当线程启动的时候(start),就会自动调用run函数
 // run函数中的代码在子线程中执行
 // 耗时操作应该放在run函数中
@@ -66,10 +86,9 @@ void AudioThread::run()
         qDebug() << QStringLiteral("打开设备失败") << errbuf;
         return;
     }
-    else
-    {
-        qDebug() << QStringLiteral("打开设备成功");
-    }
+
+    // 打印一下录音设备的参数信息
+    showSpec(ctx);
 
     // 文件名
     QString filename = FILEPATH;
@@ -100,9 +119,12 @@ void AudioThread::run()
             // 将数据写入文件
             file.write((const char*)pkt.data, pkt.size);
         }
-        else
+        else if (ret == AVERROR(EAGAIN))    // 资源临时不可用
         {
-            // if (ret == AVERROR(EAGAIN))
+            continue;
+        }
+        else    // 其他错误
+        {
             char errbuf[1024];
             av_strerror(ret, errbuf, sizeof(errbuf));
             qDebug() << "av_read_frame error" << errbuf << ret;
