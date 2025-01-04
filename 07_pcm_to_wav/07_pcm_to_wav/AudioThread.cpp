@@ -130,7 +130,6 @@ void AudioThread::run()
         }
     }
 
-
     // 释放资源
     // 关闭文件
     file.close();
