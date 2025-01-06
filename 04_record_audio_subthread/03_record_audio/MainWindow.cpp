@@ -39,8 +39,4 @@ void MainWindow::on_audioButton_clicked()
         // 设置线程文字
         ui.audioButton->setText(QStringLiteral("开始录音"));
     }
-
-
-
-    
 }

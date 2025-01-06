@@ -15,13 +15,13 @@ extern "C" {
 }
 
 #ifdef Q_OS_WIN
-// 格式名称
-#define FMT_NAME "dshow"
-// PCM文件名
-#define FILEPATH "D:/"
+    // 格式名称
+    #define FMT_NAME "dshow"
+    // PCM文件名
+    #define FILEPATH "D:/"
 #else
-#define FMT_NAME "avfoundation"
-#define FILEPATH "/Users/mj/Destop/"
+    #define FMT_NAME "avfoundation"
+    #define FILEPATH "/Users/mj/Destop/"
 #endif // Q_OS_WIN
 
 AudioThread::AudioThread(QObject *parent)
@@ -106,16 +106,18 @@ void AudioThread::run()
     }
 
     // 数据包
-    AVPacket pkt;
+    AVPacket *pkt = av_packet_alloc();
     while (!isInterruptionRequested())
     {
-        // 不断采集数据
-        ret = av_read_frame(ctx, &pkt);
+        // 从设备中采集数据，返回值为0，代表采集数据成功
+        ret = av_read_frame(ctx, pkt);
 
         if (ret == 0)   // 读取成功
         {
             // 将数据写入文件
-            file.write((const char*)pkt.data, pkt.size);
+            file.write((const char*)pkt->data, pkt->size);
+            // 释放资源
+            av_packet_unref(pkt);
         }
         else if (ret == AVERROR(EAGAIN))    // 资源临时不可用
         {
@@ -130,10 +132,12 @@ void AudioThread::run()
         }
     }
 
-
     // 释放资源
     // 关闭文件
     file.close();
+
+    // 释放资源
+    av_packet_free(&pkt); 
 
     // 关闭设备
     avformat_close_input(&ctx);
@@ -152,9 +156,4 @@ AudioThread::~AudioThread()
     wait();
 
     qDebug() << this << QStringLiteral("析构(内存被回收)");
-}
-
-void AudioThread::setStop(bool stop)
-{
-    _stop = stop;
 }
