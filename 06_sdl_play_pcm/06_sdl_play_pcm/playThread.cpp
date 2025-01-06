@@ -127,7 +127,6 @@ void playThread::run()
 		// 只要从文件中读取的音频数据，还没有填充完毕，就跳过
 		if (buffer.len > 0) continue;
 
-
 		buffer.len = file.read((char*)data, BUFFER_SIZE);
 		// 文件数据已经读取完
 		if (buffer.len <= 0)
@@ -143,6 +142,8 @@ void playThread::run()
 		buffer.data = data;
 	}
 
+	// 关闭文件
+	file.close();
 	// 关闭设备
 	SDL_CloseAudio();
 
