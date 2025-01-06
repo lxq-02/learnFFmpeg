@@ -154,6 +154,10 @@ end:
     outFile.close();
 
     // 释放输入缓冲区
+    if (inData)
+    {
+        av_freep(&inData[0]);
+    }
     av_freep(&inData);
 
     // 释放输出缓冲区
