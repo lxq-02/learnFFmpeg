@@ -12,7 +12,9 @@ public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
 
+private slots:
     void on_audioButton_clicked();
+    void onTimeChanged(unsigned long long ms);
 
 private:
     Ui::MainWindowClass ui;

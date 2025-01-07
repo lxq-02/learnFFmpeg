@@ -138,6 +138,10 @@ void AudioThread::run()
             // 将数据写入文件
             file.write((const char*)pkt.data, pkt.size);
             header.dataChunkDataSize += pkt.size;
+
+            // 计算录音时长
+            unsigned long long ms = 1000.0 * header.dataChunkDataSize / header.byteRate;
+            emit timechanged(ms);
         }
         else if (ret == AVERROR(EAGAIN))    // 资源临时不可用
         {

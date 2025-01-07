@@ -14,4 +14,7 @@ public:
 	~AudioThread();
 
 	void setStop(bool);
+
+signals:
+	void timechanged(unsigned long long ms);
 };
