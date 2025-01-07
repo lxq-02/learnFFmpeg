@@ -41,8 +41,8 @@ void FFmpegs::resampleAudio(const char* inFilename, int inSampleRate, AVSampleFo
     int outChs = av_get_channel_layout_nb_channels(outChLayout);
     // 一个样本的大小
     int outBytesPerSample = outChs * av_get_bytes_per_sample(outSampleFmt);
-    // 缓冲区的样本数量
-    int outSample = 1024;
+    // 缓冲区的样本数量（AV_ROUND_UP是向上取整）
+    int outSample = av_rescale_rnd(outSampleRate,inSample, inSampleRate, AV_ROUND_UP);
 
     // 返回结果
     int ret = 0;
@@ -133,6 +133,7 @@ void FFmpegs::resampleAudio(const char* inFilename, int inSampleRate, AVSampleFo
     }
 
     // 检查一下输出缓冲区是否还有残留的样本（已经重采样过的，转换过的）
+    // 后两个参数设为空，表示不对它进行操作，只是检测是否有之前残留的样本
     while ((ret = swr_convert(ctx, outData, outSample, nullptr, 0)) > 0) 
     {
         outFile.write((char*)outData[0], ret * outBytesPerSample);
