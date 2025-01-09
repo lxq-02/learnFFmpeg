@@ -56,8 +56,8 @@ static int encode(AVCodecContext* ctx, AVFrame* frame, AVPacket* pkt, QFile& out
             return ret;
         }
 
-        // 成功从编码器拿到编码后的数据
-        // 将编码后的数据写入文件
+        // 成功获取编码后的数据包，写入文件
+        // 这里不能直接操作 outFile，因为 pkt 是编码器输出的数据结构，包含编码后的数据和元信息，必须通过 pkt 才能正确提取数据。
         outFile.write((char *)pkt->data, pkt->size);
 
         // 释放pkt内部的资源
@@ -65,9 +65,9 @@ static int encode(AVCodecContext* ctx, AVFrame* frame, AVPacket* pkt, QFile& out
     }
 }
 
+// 编码
 void FFmpegs::aacEncode(AudioEncodeSpec& in, const char* outFilename)
 {
-    // 编码
     // 文件
     QFile inFile(in.filename);
     QFile outFile(outFilename);
@@ -177,6 +177,16 @@ void FFmpegs::aacEncode(AudioEncodeSpec& in, const char* outFilename)
     // 读取数据到frame中
     while ((ret = inFile.read((char*)frame->data[0], frame->linesize[0])) > 0)
     {
+        // 从文件中读取的数据，不足以填满frame缓冲区
+        if (ret < frame->linesize[0])
+        {
+            int bytes = av_get_bytes_per_sample((AVSampleFormat)frame->format);
+            int ch = av_get_channel_layout_nb_channels(frame->channel_layout);
+            // 设置真正有效的样本帧数量
+            // 防止编码器编码了一些冗余数据
+            frame->nb_samples = ret / (bytes * ch);
+        }
+
         // 进行编码
         if (encode(ctx, frame, pkt, outFile) < 0)
         {

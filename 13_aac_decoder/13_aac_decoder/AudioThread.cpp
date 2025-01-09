@@ -35,11 +35,12 @@ AudioThread::~AudioThread()
 
 void AudioThread::run()
 {
-    AudioEncodeSpec in;
-    in.filename = "H:/44100_s16le_2.pcm";
-    in.sampleRate = 44100;
-    in.sampleFmt = AV_SAMPLE_FMT_S16;
-    in.chLayout = AV_CH_LAYOUT_STEREO;
+    AudioDecodeSpec out;
+    out.filename = "./out.pcm";
 
-    FFmpegs::aacEncode(in, "H:/out.aac");
+    FFmpegs::aacDecode("./in.aac", out);
+
+    qDebug() << QStringLiteral("采样率:") << out.sampleRate;
+    qDebug() << QStringLiteral("采样格式：") << av_get_sample_fmt_name(out.sampleFmt);
+    qDebug() << QStringLiteral("声道数：") << av_get_channel_layout_nb_channels(out.chLayout);
 }
