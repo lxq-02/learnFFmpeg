@@ -196,6 +196,7 @@ void FFmpegs::aacDecode(const char* inFilename, AudioDecodeSpec& out)
     // 刷新缓冲区
     //      pkt->data = NULL;
     //      pkt->size = 0
+    //      decode(ctx, pkt, frame, outFile);
     decode(ctx, nullptr, frame, outFile);
 
     // 赋值输出参数
