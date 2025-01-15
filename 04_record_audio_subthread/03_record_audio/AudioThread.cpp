@@ -45,8 +45,6 @@ void showSpec(AVFormatContext* ctx)
     qDebug() << params->format;
     // 每一个样本的一个声道占用多少个字节
     qDebug() << av_get_bytes_per_sample((AVSampleFormat)params->format);
-
-
 }
 
 // 当线程启动的时候(start),就会自动调用run函数
@@ -68,8 +66,8 @@ void AudioThread::run()
     AVFormatContext* ctx = nullptr;
 
 #ifdef Q_OS_WIN
-    //QString deviceName = QStringLiteral("audio=立体声混音 (Realtek(R) Audio)");
-    QString deviceName = QStringLiteral("audio=麦克风阵列 (2- Realtek(R) Audio)");
+    QString deviceName = QStringLiteral("audio=立体声混音 (Realtek(R) Audio)");
+    //QString deviceName = QStringLiteral("audio=麦克风阵列 (2- Realtek(R) Audio)");
     QByteArray deviceNameUtf8 = deviceName.toUtf8();
     const char* audio = deviceNameUtf8.constData();
 #else
