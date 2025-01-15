@@ -51,12 +51,12 @@ void MainWindow::on_audioButton_clicked()
         return;
     }
 
-    // 格式上下文（将来利用上下文操作设备
+    // 格式上下文（将来利用上下文操作设备）
     AVFormatContext* ctx = nullptr;
 
 #ifdef Q_OS_WIN
-    //QString deviceName = QStringLiteral("audio=立体声混音 (Realtek(R) Audio)");
-    QString deviceName = QStringLiteral("audio=麦克风阵列 (2- Realtek(R) Audio)");
+    QString deviceName = QStringLiteral("audio=立体声混音 (Realtek(R) Audio)");
+    //QString deviceName = QStringLiteral("audio=麦克风阵列 (2- Realtek(R) Audio)");
     QByteArray deviceNameUtf8 = deviceName.toUtf8();
     const char* audio = deviceNameUtf8.constData();
 #else
@@ -83,7 +83,7 @@ void MainWindow::on_audioButton_clicked()
     // WriteOnly:只写模式。如果文件不存在，创建文件；如果文件存在，清空文件
     if (!file.open(QIODevice::WriteOnly))
     {
-        qDebug() << FILENAME << "文件打开失败";
+        qDebug() << FILENAME << QStringLiteral("文件打开失败");
         
         // 关闭设备
         avformat_close_input(&ctx);
