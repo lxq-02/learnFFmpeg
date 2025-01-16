@@ -14,7 +14,6 @@
     </QtTouchProperty>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="QtSettings">
-    <QtTouchProperty>
-    </QtTouchProperty>
+    <QtTouchProperty />
   </PropertyGroup>
 </Project>

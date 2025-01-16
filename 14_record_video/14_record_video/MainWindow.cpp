@@ -1,45 +1,44 @@
 #include "MainWindow.h"
-#include <QTime>
-#include <QDebug>
 
-MainWindow::MainWindow(QWidget* parent)
-    : QMainWindow(parent)
+MainWindow::MainWindow(QWidget *parent)
+    : QWidget(parent)
+    , ui(new Ui::MainWindowClass())
 {
-    ui.setupUi(this);
-    
-    //connect(ui.audioButton, &QPushButton::clicked, this, &MainWindow::on_audioButton_clicked);
+    ui->setupUi(this);
+
+    connect(ui->videoButton, &QPushButton::clicked, this, &MainWindow::on_videoButton_clicked);
 }
 
 MainWindow::~MainWindow()
-{}
-
-void MainWindow::on_audioButton_clicked()
 {
-    if (!_audioThread)   // 点击了“开始录音”
-    {
-        // 开始线程
-        _audioThread = new AudioThread(this);
-        _audioThread->start();
+    delete ui;
+}
 
-        connect(_audioThread, &AudioThread::finished,
-            [this]()    // 线程结束
+void MainWindow::on_videoButton_clicked()
+{
+    if (!videoThread)   // 点击了开始录视频
+    {
+        // 开启线程
+		videoThread = new VideoThread(this);
+		videoThread->start();
+
+        connect(videoThread, &VideoThread::finished, [this]()
             {
-                _audioThread = nullptr;
-                ui.audioButton->setText(QStringLiteral("开始录视频"));
+                // 线程结束
+                videoThread = nullptr;
+                ui->videoButton->setText(QStringLiteral("开始录视频"));
             });
 
-        // 设置线程文字
-        ui.audioButton->setText(QStringLiteral("结束录视频"));
+        // 设置按钮文字
+        ui->videoButton->setText(QStringLiteral("结束录视频"));
     }
-    else   // 点击率“结束录音”
+    else // 点击了“结束录视频"
     {
         // 结束线程
-        _audioThread->requestInterruption();
-        _audioThread->wait(); // 等待线程完全退出
-        delete _audioThread;  // 手动销毁线程对象
-        _audioThread = nullptr;
+        videoThread->requestInterruption();
+        videoThread = nullptr;
 
-        // 设置线程文字
-        ui.audioButton->setText(QStringLiteral("开始视频 "));
+        // 设置按钮文字
+        ui->videoButton->setText(QStringLiteral("开始录视频"));
     }
 }

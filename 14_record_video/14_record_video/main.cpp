@@ -1,9 +1,9 @@
 #include "MainWindow.h"
 #include <QtWidgets/QApplication>
 
-extern "C" {
-// 设备相关API
-#include <libavdevice/avdevice.h>
+extern "C"
+{
+	#include "libavdevice/avdevice.h"
 }
 
 int main(int argc, char *argv[])

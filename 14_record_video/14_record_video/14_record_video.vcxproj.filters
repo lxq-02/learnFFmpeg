@@ -40,16 +40,13 @@
     <ClCompile Include="main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="AudioThread.cpp">
+    <ClCompile Include="VideoThread.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <QtMoc Include="AudioThread.h">
+    <QtMoc Include="VideoThread.h">
       <Filter>Header Files</Filter>
     </QtMoc>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="..\..\..\..\01_04_22_23_39.pcm" />
   </ItemGroup>
 </Project>

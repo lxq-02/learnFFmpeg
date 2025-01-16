@@ -1,10 +1,14 @@
 #pragma once
 
-#include <QtWidgets/QMainWindow>
+#include <QtWidgets/QWidget>
 #include "ui_MainWindow.h"
-#include "AudioThread.h"
+#include "VideoThread.h"
 
-class MainWindow : public QMainWindow
+QT_BEGIN_NAMESPACE
+namespace Ui { class MainWindowClass; };
+QT_END_NAMESPACE
+
+class MainWindow : public QWidget
 {
     Q_OBJECT
 
@@ -12,10 +16,9 @@ public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
 
-private slots:
-    void on_audioButton_clicked();
+    void on_videoButton_clicked();
 
 private:
-    Ui::MainWindowClass ui;
-    AudioThread* _audioThread = nullptr;
+    Ui::MainWindowClass *ui;
+    VideoThread* videoThread = nullptr;
 };
