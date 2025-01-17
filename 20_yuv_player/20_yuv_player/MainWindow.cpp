@@ -1,6 +1,7 @@
 #include "MainWindow.h"
 #include <QDebug>	
 #include <vector>
+#include "YuvPlayer.h"
 
 #define RET(judge, func) \
 	if (judge) \
@@ -10,7 +11,7 @@
 	}
 
 #define FILENAME "./dragon_ball.yuv"
-#define PIXEL_FORMAT SDL_PIXELFORMAT_IYUV
+#define PIXEL_FORMAT AV_PIX_FMT_YUV420P
 #define IMG_W 640
 #define IMG_H 480
 
@@ -20,85 +21,49 @@ MainWindow::MainWindow(QWidget *parent)
 {
     ui->setupUi(this);
 
-    // 创建播放器界面
-    _widget = new QWidget(this);
-    _widget->setGeometry(100, 50, IMG_W, IMG_H);
+	// 创建播放器
+    _player = new YuvPlayer(this);
+    int w = 400;
+    int h = 400;
+    int x = (this->width() - w) >> 1;
+    int y = (this->height() - h) >> 1;
+    _player->setGeometry(x, y, w, h);
 
-    // 初始化子系统
-    RET(SDL_Init(SDL_INIT_VIDEO), SDL_Init);
-
-    // 创建窗口
-    _window = SDL_CreateWindowFrom((void*)_widget->winId());
-    RET(!_window, SDL_CreateWindowFrom);
-
-	// 创建渲染上下文
-	_renderer = SDL_CreateRenderer(_window, -1, 
-        SDL_RENDERER_SOFTWARE |
-        SDL_RENDERER_PRESENTVSYNC);
-    if (!_renderer)
+    // 设置需要播放的YUV文件
+    Yuv yuv =
     {
-        _renderer = SDL_CreateRenderer(_window, -1, 0);
-        RET(!_renderer, SDL_CreateRenderer);
-    }
-
-    // 创建纹理
-    _texture = SDL_CreateTexture(_renderer,
+        FILENAME,
+        IMG_W,
+        IMG_H,
         PIXEL_FORMAT,
-        SDL_TEXTUREACCESS_STREAMING,
-        IMG_W, IMG_H);
-    RET(!_texture, SDL_CreateTexture);
+        30
+    };
+	_player->setYUV(yuv);
 
-    // 打开文件
-    _file.setFileName(FILENAME);
-    if (!_file.open(QFile::ReadOnly))
-    {
-        qDebug() << "file open error" << FILENAME;
-    }
 }
 
 MainWindow::~MainWindow()
 {
     delete ui;
+}
 
-    _file.close();
-    SDL_DestroyTexture(_texture);
-    SDL_DestroyRenderer(_renderer);
-    SDL_DestroyWindow(_window);
-    SDL_Quit;
+void MainWindow::on_stopButton_clicked()
+{
+    _player->stop();
 }
 
 void MainWindow::on_videoButton_clicked()
 {
-    // 开启定时器
-    _timerId = startTimer(33);
-}
-
-// 每隔一段时间就会调用
-void MainWindow::timerEvent(QTimerEvent* event)
-{
-    int imgSize = IMG_W * IMG_H * 3 / 2;
-    std::vector<char> data(imgSize);
-
-    if (_file.read(data.data(), imgSize) > 0)
+    // 歌曲正在播放
+    if (_player->isPlaying())
     {
-        // 将YUV的像素数据填充到texture
-        RET(SDL_UpdateTexture(_texture, nullptr, data.data(), IMG_W), SDL_UpdateTexture);
+        _player->pause();
 
-        // 设置绘制颜色（画笔颜色）
-        RET(SDL_SetRenderDrawColor(_renderer, 0, 0, 0, SDL_ALPHA_OPAQUE), SDL_SetRenderDrawColor);
-
-        // 用绘制颜色（画笔颜色）清除渲染目标
-        RET(SDL_RenderClear(_renderer), SDL_RenderClear);
-
-        // 拷贝纹理数据到渲染目标（默认是window）
-        RET(SDL_RenderCopy(_renderer, _texture, nullptr, nullptr), SDL_RenderCopy);
-
-        // 更新所有的渲染操作到屏幕上
-        SDL_RenderPresent(_renderer);
+        ui->videoButton->setText(QStringLiteral("播放"));
     }
-    else
+    else  // 歌曲没有正在播放
     {
-        // 文件已经读取完毕
-        killTimer(_timerId);
+        _player->play();
+        ui->videoButton->setText(QStringLiteral("暂停"));
     }
 }

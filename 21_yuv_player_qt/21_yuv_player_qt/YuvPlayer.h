@@ -1,7 +1,6 @@
 #pragma once
 
 #include <QWidget>
-#include <SDL.h>
 #include <QFile>
 
 extern "C"
@@ -43,16 +42,34 @@ public:
 	State getState();
 
 signals:
+	void stateChanged();
 
 private:
-	SDL_Window* _window = nullptr;
-	SDL_Renderer* _renderer = nullptr;
-	SDL_Texture* _texture = nullptr;
-	QFile _file;
 	int _timerId = 0;
 	State _state = Stopped;
+
 	Yuv _yuv;
+	// 一帧图片的大小
+	int _imgSize;
+	// 刷帧的时间间隔
+	int _interval;
 	bool _playing;
+	QFile* _file = nullptr;
+	QImage* _currentImage = nullptr;
+	QRect _dstRect;
+
+	// 改变状态
+	void setState(State state);
+
+	// 关闭文件
+	void closeFile();
+
+	// 释放图片
+	void freeCurrentImage();
+
+	// 停止定时器
+	void stopTimer();
 
 	void timerEvent(QTimerEvent* event);
+	void paintEvent(QPaintEvent* event);
 };

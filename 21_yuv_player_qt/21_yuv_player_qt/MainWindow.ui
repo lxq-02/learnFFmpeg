@@ -24,7 +24,7 @@
    </property>
    <layout class="QVBoxLayout" name="verticalLayout">
     <item>
-     <widget class="QPushButton" name="videoButton">
+     <widget class="QPushButton" name="playButton">
       <property name="text">
        <string>开始录视频</string>
       </property>

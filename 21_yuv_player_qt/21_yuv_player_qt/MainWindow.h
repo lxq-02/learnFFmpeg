@@ -19,8 +19,11 @@ public:
     ~MainWindow();
 
 private slots:
-    void on_videoButton_clicked();
+    void on_playButton_clicked();
     void on_stopButton_clicked();
+
+    void on_PlayerStateChanged();
+    void on_nextButton_clicked();
 
 private:
     Ui::MainWindowClass *ui;
