@@ -181,7 +181,6 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="AudioThread.cpp" />
-    <ClCompile Include="Demuxer.cpp" />
     <ClCompile Include="FFmpegs.cpp" />
     <QtRcc Include="MainWindow.qrc" />
     <QtUic Include="MainWindow.ui" />
@@ -191,7 +190,6 @@
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="AudioThread.h" />
-    <ClInclude Include="Demuxer.h" />
     <ClInclude Include="FFmpegs.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

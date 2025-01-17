@@ -1,6 +1,4 @@
-#ifndef AUDIOTHREAD_H
-#define AUDIOTHREAD_H
-
+#pragma once
 #include <QThread>
 
 class AudioThread : public QThread {
@@ -15,4 +13,3 @@ signals:
 
 };
 
-#endif // AUDIOTHREAD_H

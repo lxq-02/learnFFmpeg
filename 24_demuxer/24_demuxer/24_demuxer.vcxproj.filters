@@ -46,9 +46,6 @@
     <ClCompile Include="AudioThread.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Demuxer.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="AudioThread.h">
@@ -57,9 +54,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="FFmpegs.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Demuxer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
