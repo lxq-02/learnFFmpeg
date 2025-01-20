@@ -119,10 +119,11 @@ void MainWindow::on_stopBtn_clicked()
 
 void MainWindow::on_openFileBtn_clicked()
 {
-    QString filename = QFileDialog::getOpenFileName(nullptr,
-        "选择多媒体文件",
-        "./res",
-        "多媒体文件（*.mp4 *.avi *.mkv *.mp3 *.aac)");
+    QString filename = QFileDialog::getOpenFileName(
+        nullptr,
+        QStringLiteral("选择多媒体文件"),
+        "./",
+        QStringLiteral("多媒体文件(*.mp4 *.avi *.mkv *.mp3 *.aac)"));
     if (filename.isEmpty()) return;
 
     // 开始播放打开的文件

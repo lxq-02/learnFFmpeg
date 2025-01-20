@@ -93,7 +93,7 @@ VideoPlayer::State VideoPlayer::getState()
 
 void VideoPlayer::setFilename(QString& filename)
 {
-	const char* name = filename.toStdString().c_str();
+	const char* name = QStringLiteral(filename).toUtf8().constData();
 	memcpy(_filename, name, strlen(name) + 1);
 }
 
