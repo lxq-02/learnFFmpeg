@@ -86,7 +86,7 @@ public:
 	int getVolumn();
 	// 设置静音
 	void setMute(bool mute);
-	void isMute();
+	bool isMute();
 
 signals:
 	void stateChanged(VideoPlayer* player);
@@ -121,7 +121,7 @@ private:
 	// 音频重采样输入、输出参数
 	AudioSwrSpec _aSwrInSpec, _aSwrOutSpec;
 	// 音频重采样输入、输出frame
-	AVFrame* _aSwrInFrame = nullptr, * _aSwtOutFrame = nullptr;
+	AVFrame* _aSwrInFrame = nullptr, * _aSwrOutFrame = nullptr;
 	// 音频重采样输出PCM的索引（从哪个位置开始取出PCM数据填充到SDL的音频缓冲区）
 	int _aSwrOutIdx = 0;
 	// 音频重采样输出PCM的大小
@@ -148,7 +148,7 @@ private:
 	// SDL填充缓冲区的回调函数
 	static void sdlAudioCallbackFunc(void* userdata, Uint8* stream, int len);
 	// SDL填充缓冲区的回调函数
-	void sdlAudioCallbakc(Uint8* stream, int len);
+	void sdlAudioCallback(Uint8* stream, int len);
 	// 音频解码
 	int decodeAudio();
 
@@ -169,6 +169,8 @@ private:
 	CondMutex _vMutex;
 	// 视频时钟，当前视频包对应的时间值
 	double _vTime = 0;
+	// 视频资源是否可以释放
+	bool _vCanFree = false;
 	// 视频资源是否可以释放
 	bool _vSeekTime = -1;
 	// 是否有视频流

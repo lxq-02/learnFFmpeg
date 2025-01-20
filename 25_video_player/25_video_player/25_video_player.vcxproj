@@ -120,7 +120,7 @@
     </ClCompile>
     <Link>
       <AdditionalLibraryDirectories>F:\SDL2-2.30.11\lib\x64;F:\msys64\usr\local\ffmpeg\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>avdevice.lib;avutil.lib;avformat.lib;avcodec.lib;sdl2.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>avdevice.lib;avutil.lib;avformat.lib;avcodec.lib;sdl2.lib;swscale.lib;swresample.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|Win32'" Label="Configuration">
@@ -185,6 +185,10 @@
     <ClCompile Include="Demuxer.cpp" />
     <ClCompile Include="FFmpegs.cpp" />
     <ClCompile Include="VideoPlayer.cpp" />
+    <ClCompile Include="VideoPlayer_Audio.cpp" />
+    <ClCompile Include="VideoPlayer_Video.cpp" />
+    <ClCompile Include="VideoSlider.cpp" />
+    <ClCompile Include="VideoWidget.cpp" />
     <QtRcc Include="MainWindow.qrc" />
     <QtUic Include="MainWindow.ui" />
     <QtMoc Include="MainWindow.h" />
@@ -193,6 +197,8 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="CondMutex.h" />
+    <QtMoc Include="VideoWidget.h" />
+    <QtMoc Include="VideoSlider.h" />
     <QtMoc Include="VideoPlayer.h" />
     <QtMoc Include="AudioThread.h" />
     <ClInclude Include="Demuxer.h" />

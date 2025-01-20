@@ -55,12 +55,30 @@
     <ClCompile Include="CondMutex.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="VideoPlayer_Audio.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="VideoPlayer_Video.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="VideoSlider.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="VideoWidget.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="AudioThread.h">
       <Filter>Header Files</Filter>
     </QtMoc>
     <QtMoc Include="VideoPlayer.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="VideoSlider.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="VideoWidget.h">
       <Filter>Header Files</Filter>
     </QtMoc>
   </ItemGroup>
