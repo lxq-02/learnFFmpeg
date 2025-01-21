@@ -8,7 +8,6 @@ extern "C"
 #include <libavutil/avutil.h>
 }
 
-
 #define AUDIO_MAX_PKT_SIZE 1000
 #define VIDEO_MAX_PKT_SIZE 500
 
@@ -35,7 +34,6 @@ VideoPlayer::~VideoPlayer()
 	SDL_Quit();
 }
 
-#pragma mark - 公共方法
 void VideoPlayer::play()
 {
 	if (_state == Playing) return;
@@ -51,7 +49,7 @@ void VideoPlayer::play()
 	}
 	else
 	{
-		// 改变zhuangt
+		// 改变状态
 		setState(Playing);
 	}
 }
@@ -93,7 +91,9 @@ VideoPlayer::State VideoPlayer::getState()
 
 void VideoPlayer::setFilename(QString& filename)
 {
-	const char* name = QStringLiteral(filename).toUtf8().constData();
+	QByteArray byteArray = filename.toLocal8Bit(); // 使用 QByteArray 将 QString 转换为 QByteArray
+	const char* name = byteArray.data();
+
 	memcpy(_filename, name, strlen(name) + 1);
 }
 
@@ -132,7 +132,6 @@ bool VideoPlayer::isMute()
 	return _mute;
 }
 
-#pragma mark - 私有方法
 int VideoPlayer::initDecoder(AVCodecContext** decodeCtx, AVStream** stream, AVMediaType type)
 {
 	// 根据type寻找最合适的流信息
@@ -212,109 +211,109 @@ void VideoPlayer::readFile()
 	// 到此为止，初始化完毕
 	emit initFinished(this);
 
-	// 改变状态
-	setState(Playing);
+	//// 改变状态
+	//setState(Playing);
 
-	// 音频解码子线程：开始工作
-	SDL_PauseAudio(0);
+	//// 音频解码子线程：开始工作
+	//SDL_PauseAudio(0);
 
-	// 视频解码子线程：开始工作
-	std::thread([this]()
-		{
-			decodeVideo();
-		}).detach();
+	//// 视频解码子线程：开始工作
+	//std::thread([this]()
+	//	{
+	//		decodeVideo();
+	//	}).detach();
 
-	// 从输入文件中读取数据
-	AVPacket pkt;
-	while (_state != Stopped)
-	{
-		// 处理seek操作
-		if (_seekTime >= 0)
-		{
-			int streamIdx;
-			if (_hasAudio) // 优先使用音频流索引
-			{
-				streamIdx = _aStream->index;
-			}
-			else
-			{
-				streamIdx = _vStream->index;
-			}
+	//// 从输入文件中读取数据
+	//AVPacket pkt;
+	//while (_state != Stopped)
+	//{
+	//	// 处理seek操作
+	//	if (_seekTime >= 0)
+	//	{
+	//		int streamIdx;
+	//		if (_hasAudio) // 优先使用音频流索引
+	//		{
+	//			streamIdx = _aStream->index;
+	//		}
+	//		else
+	//		{
+	//			streamIdx = _vStream->index;
+	//		}
 
-			// 现实时间 -> 时间戳
-			AVRational timeBase = _fmtCtx->streams[streamIdx]->time_base;
-			int64_t ts = _seekTime / av_q2d(timeBase);
-			ret = av_seek_frame(_fmtCtx, streamIdx, ts, AVSEEK_FLAG_BACKWARD);
+	//		// 现实时间 -> 时间戳
+	//		AVRational timeBase = _fmtCtx->streams[streamIdx]->time_base;
+	//		int64_t ts = _seekTime / av_q2d(timeBase);
+	//		ret = av_seek_frame(_fmtCtx, streamIdx, ts, AVSEEK_FLAG_BACKWARD);
 
-			if (ret < 0) // seek失败
-			{
-				qDebug() << QStringLiteral("seek失败") << _seekTime << ts << streamIdx;
-				_seekTime = -1;
-			}
-			else
-			{
-				qDebug() << QStringLiteral("seek成功") << _seekTime << ts << streamIdx;
-				_vSeekTime = _seekTime;
-				_aSeekTime = _seekTime;
-				_seekTime = -1;
-				// 恢复时钟
-				_aTime = 0;
-				_vTime = 0;
-				// 清空之前读取的数据包
-				clearAudioPktList();
-				clearVideoPktList();
-			}
-		}
+	//		if (ret < 0) // seek失败
+	//		{
+	//			qDebug() << QStringLiteral("seek失败") << _seekTime << ts << streamIdx;
+	//			_seekTime = -1;
+	//		}
+	//		else
+	//		{
+	//			qDebug() << QStringLiteral("seek成功") << _seekTime << ts << streamIdx;
+	//			_vSeekTime = _seekTime;
+	//			_aSeekTime = _seekTime;
+	//			_seekTime = -1;
+	//			// 恢复时钟
+	//			_aTime = 0;
+	//			_vTime = 0;
+	//			// 清空之前读取的数据包
+	//			clearAudioPktList();
+	//			clearVideoPktList();
+	//		}
+	//	}
 
-		int vSize = _vPktList.size();
-		int aSize = _aPktList.size();
+	//	int vSize = _vPktList.size();
+	//	int aSize = _aPktList.size();
 
-		if (vSize >= VIDEO_MAX_PKT_SIZE || aSize >= AUDIO_MAX_PKT_SIZE)
-		{
-			continue;
-		}
+	//	if (vSize >= VIDEO_MAX_PKT_SIZE || aSize >= AUDIO_MAX_PKT_SIZE)
+	//	{
+	//		continue;
+	//	}
 
-		ret = av_read_frame(_fmtCtx, &pkt);
-		if (ret == 0)
-		{
-			if (pkt.stream_index == _aStream->index) // 读取到的是音频数据
-			{
-				addAudioPkt(pkt);
-			}
-			else if (pkt.stream_index == _vStream->index) // 读取到的是视频数据
-			{
-				addVideoPkt(pkt);
-			}
-			else // 读到了文件的尾部
-			{
-				av_packet_unref(&pkt);
-			}
-		}
-		else if (ret == AVERROR_EOF) // 读到了文件的尾部 
-		{
-			if (vSize == 0 && aSize == 0)
-			{
-				// 说明文件正常播放完毕
-				_fmtCtxCanFree = true;
-				break;
-			}
-		}
-		else
-		{
-			ERROR_BUF;
-			qDebug() << "av_read_frame error" << errbuf;
-			continue;
-		}
-	}
-	if (_fmtCtxCanFree) // 文件正常播放完毕
-	{
-		stop();
-	}
-	else
-	{
-		// 标记一下：_fmtCtx可以释放了
-		_fmtCtxCanFree = true;
-	}
+	//	ret = av_read_frame(_fmtCtx, &pkt);
+	//	if (ret == 0)
+	//	{
+	//		if (pkt.stream_index == _aStream->index) // 读取到的是音频数据
+	//		{
+	//			addAudioPkt(pkt);
+	//		}
+	//		else if (pkt.stream_index == _vStream->index) // 读取到的是视频数据
+	//		{
+	//			addVideoPkt(pkt);
+	//		}
+	//		else // 读到了文件的尾部
+	//		{
+	//			av_packet_unref(&pkt);
+	//		}
+	//	}
+	//	else if (ret == AVERROR_EOF) // 读到了文件的尾部 
+	//	{
+	//		if (vSize == 0 && aSize == 0)
+	//		{
+	//			// 说明文件正常播放完毕
+	//			_fmtCtxCanFree = true;
+	//			break;
+	//		}
+	//	}
+	//	else
+	//	{
+	//		ERROR_BUF;
+	//		qDebug() << "av_read_frame error" << errbuf;
+	//		continue;
+	//	}
+	//}
+	//if (_fmtCtxCanFree) // 文件正常播放完毕
+	//{
+	//	stop();
+	//}
+	//else
+	//{
+	//	// 标记一下：_fmtCtx可以释放了
+	//	_fmtCtxCanFree = true;
+	//}
 }
 
 void VideoPlayer::free()

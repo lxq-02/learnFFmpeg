@@ -187,7 +187,7 @@ private:
 	// 解码视频
 	void decodeVideo();
 
-	/************ 其他 ************/
+	/************************ 其他 ************************/
 	// 解封装上下文
 	AVFormatContext* _fmtCtx = nullptr;
 	// fmtCtx是否可以释放

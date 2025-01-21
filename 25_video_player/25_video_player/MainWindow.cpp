@@ -46,7 +46,6 @@ MainWindow::~MainWindow()
     delete _player;
 }
 
-#pragma mark - Ë½ÓÐ·½·¨
 void MainWindow::onPlayerTimeChanged(VideoPlayer* player)
 {
     ui->timeSlider->setValue(player->getTime());

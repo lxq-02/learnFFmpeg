@@ -15,12 +15,14 @@ void VideoSlider::mousePressEvent(QMouseEvent* ev)
 	// int value = minimum() + (ev->pos().x() * 1.0 / width()) * (maximum() - minimum());
 	// setValue(value);
 
+	// 默认的函数，根据位置计算出对应的value
 	int value = QStyle::sliderValueFromPosition(minimum(),
-		maximum(),
-		ev->pos().x(),
-		width());
+												maximum(),
+												ev->pos().x(),
+												width());
 	setValue(value);
 
+	// 调用基类的默认行为
 	QSlider::mousePressEvent(ev);
 
 	// 发出信号
