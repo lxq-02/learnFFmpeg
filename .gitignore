@@ -16,6 +16,7 @@ build/
 Debug/
 Release/
 x64/
+tools/
 
 # Qt-es
 object_script.*.Release
