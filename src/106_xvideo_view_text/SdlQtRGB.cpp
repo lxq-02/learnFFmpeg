@@ -22,11 +22,12 @@ SdlQtRGB::SdlQtRGB(QWidget *parent)
 	this->move(0, 0);
 	sdl_width = 1280;
 	sdl_height = 720;
+	this->resize(sdl_width, sdl_height);
 
 
 	view = XVideoView::Create();
 	view->Init(sdl_width, sdl_height,
-		XVideoView::YUV420P);
+		XVideoView::YUV420P, (void*)ui.label->winId());
 
 	// 打开文件
 	_file.setFileName(FILENAME);
@@ -61,4 +62,11 @@ void SdlQtRGB::timerEvent(QTimerEvent* ev)
 		killTimer(_timerId);
 	}
 
+}
+
+void SdlQtRGB::resizeEvent(QResizeEvent* ev)
+{
+	ui.label->resize(size());
+	ui.label->move(0, 0);
+	view->Scale(width(), height());
 }

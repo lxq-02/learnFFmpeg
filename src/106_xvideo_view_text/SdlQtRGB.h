@@ -22,6 +22,7 @@ public:
 	~SdlQtRGB();
 
 	void timerEvent(QTimerEvent* ev) override;
+	void resizeEvent(QResizeEvent* ev) override;
 
 private:
 	Ui::SdlQtRGBClass ui;

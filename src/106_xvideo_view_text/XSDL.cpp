@@ -17,6 +17,8 @@ static bool InitVideo()
         cout << SDL_GetError() << endl;
         return false;
     }
+    // 设置缩放算法，解决锯齿问题, 线性插值
+    SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "1");
     return true;
 }
 
@@ -123,11 +125,14 @@ bool XSDL::Draw(const unsigned char* data, int linesize)
     SDL_RenderClear(_renderer);
 
     // 纹理复制到渲染器
+    if (_scale_w <= 0) _scale_w = _width;
+    if (_scale_h <= 0) _scale_h = _height;
+
     SDL_Rect rect;
     rect.x = 0;
     rect.y = 0;
-    rect.w = _width;
-    rect.h = _height;
+    rect.w = _scale_w; // 渲染的宽高，可缩放
+    rect.h = _scale_h;
     result = SDL_RenderCopy(_renderer, _texture, nullptr, &rect);
     if (result != 0)
     {

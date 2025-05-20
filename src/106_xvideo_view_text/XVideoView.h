@@ -46,10 +46,20 @@ public:
 	*/
 	virtual bool Draw(const unsigned char* data, int linesize = 0) = 0;
 
+	// 显示缩放
+	void Scale(int w, int h)
+	{
+		_scale_w = w;
+		_scale_h = h;
+	}
+
 protected:
 	int _width = 0;
 	int _height = 0;
 	Format _fmt = RGBA; // 像素格式
 	std::mutex _mtx;	// 确保线程安全
+
+	int _scale_w = 0;	// 显示大小
+	int _scale_h = 0;	// 
 };
 
