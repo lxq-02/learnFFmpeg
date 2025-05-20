@@ -37,6 +37,12 @@ public:
 		Format fmt = RGBA,
 		void* win_id = nullptr) = 0;
 
+	// 清理所有申请的资源，包括关闭窗口
+	virtual void Close() = 0;
+
+	// 处理窗口退出事件
+	virtual bool IsExit() = 0;
+
 	/*
 	* 渲染图像，线程安全
 	* @para data 渲染的二进制数据

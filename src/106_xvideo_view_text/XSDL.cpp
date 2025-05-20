@@ -22,6 +22,37 @@ static bool InitVideo()
     return true;
 }
 
+void XSDL::Close()
+{
+    // 确保线程安全
+    unique_lock<mutex>  sdl_lock(_mtx);
+    if (_texture)
+    {
+        SDL_DestroyTexture(_texture);
+        _texture = nullptr;
+    }
+    if (_renderer)
+    {
+        SDL_DestroyRenderer(_renderer);
+        _renderer = nullptr;
+    }
+    if (_window)
+    {
+        SDL_DestroyWindow(_window);
+        _window = nullptr;
+    }
+
+}
+
+bool XSDL::IsExit()
+{
+    SDL_Event ev;
+    SDL_WaitEventTimeout(&ev, 1);
+    if (ev.type == SDL_QUIT)
+        return true;
+    return false;
+}
+
 bool XSDL::Init(int w, int h, Format fmt, void* win_id)
 {
     if (w <= 0 || h <= 0) return false;
@@ -59,6 +90,8 @@ bool XSDL::Init(int w, int h, Format fmt, void* win_id)
     }
 
     // 2、创建渲染器
+    if (_renderer)
+        SDL_DestroyRenderer(_renderer);
     _renderer = SDL_CreateRenderer(_window, -1, SDL_RENDERER_ACCELERATED);
     if (!_renderer)
     {
@@ -76,6 +109,8 @@ bool XSDL::Init(int w, int h, Format fmt, void* win_id)
     default:
         break;
     }
+    if (_texture)
+        SDL_DestroyTexture(_texture);
     _texture = SDL_CreateTexture(_renderer,
         sdl_fmt,                        // 像素格式
         SDL_TEXTUREACCESS_STREAMING,    // 频繁修改的渲染（带锁）
@@ -125,15 +160,17 @@ bool XSDL::Draw(const unsigned char* data, int linesize)
     SDL_RenderClear(_renderer);
 
     // 纹理复制到渲染器
-    if (_scale_w <= 0) _scale_w = _width;
-    if (_scale_h <= 0) _scale_h = _height;
-
     SDL_Rect rect;
-    rect.x = 0;
-    rect.y = 0;
-    rect.w = _scale_w; // 渲染的宽高，可缩放
-    rect.h = _scale_h;
-    result = SDL_RenderCopy(_renderer, _texture, nullptr, &rect);
+    SDL_Rect* prect = nullptr;
+    if (_scale_w > 0) // 用户手动设置缩放
+    {
+        rect.x = 0;
+        rect.y = 0;
+        rect.w = _scale_w; // 渲染的宽高，可缩放
+        rect.h = _scale_h;
+        prect = &rect;
+    }
+    result = SDL_RenderCopy(_renderer, _texture, nullptr, prect);
     if (result != 0)
     {
         cout << SDL_GetError() << endl;

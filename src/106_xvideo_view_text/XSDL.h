@@ -7,6 +7,13 @@ struct SDL_Texture;
 
 class XSDL : public XVideoView
 {
+public:
+	// 清理所有申请的资源，包括关闭窗口
+	void Close() override;
+
+	// 处理窗口退出事件
+	bool IsExit() override;
+
 	/*
 	* 初始化渲染窗口
 	* @para w 窗口宽度

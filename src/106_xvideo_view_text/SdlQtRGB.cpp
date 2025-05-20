@@ -52,6 +52,11 @@ void SdlQtRGB::timerEvent(QTimerEvent* ev)
 	// YUV420格式：一个像素使用1.5个字节存储（1个Y，0.25个U，0.25个V）
 	int imgSize = sdl_width * sdl_height * 3 / 2;
 	std::vector<unsigned char> data(imgSize);
+	if (view->IsExit())
+	{
+		view->Close();
+		exit(0);
+	}
 	if (_file.read((char*)data.data(), imgSize) > 0)
 	{
 		view->Draw(data.data(), sdl_width);
