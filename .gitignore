@@ -60,3 +60,8 @@ compile_commands.json
 *creator.user*
 
 *_qmlcache.qrc
+
+# video
+*.yuv
+*.mp4
+*.rgba

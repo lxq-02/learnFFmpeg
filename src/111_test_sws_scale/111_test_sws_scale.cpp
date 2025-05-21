@@ -1,6 +1,5 @@
 #include <iostream>
 #include <fstream>
-using namespace std;
 
 extern "C"
 {
@@ -12,6 +11,9 @@ extern "C"
 #pragma comment(lib, "swscale.lib")
 
 #define YUV_FILE "400_300_25.yuv"
+#define RGBA_FILE "800_600_25.rgba"
+
+using namespace std;
 
 int main(int argc, char* argv[])
 {
@@ -38,6 +40,13 @@ int main(int argc, char* argv[])
 	if (!ifs)
 	{
 		cout << "open " << YUV_FILE << " failed!" << endl;
+		return -1;
+	}
+	ofstream ofs;
+	ofs.open(RGBA_FILE, ios::binary);
+	if (!ofs)
+	{
+		cout << "open " << RGBA_FILE << " failed!" << endl;
 		return -1;
 	}
 	SwsContext* yuv2rgb = nullptr;
@@ -79,12 +88,73 @@ int main(int argc, char* argv[])
 		);
 
 		cout << result << " " << flush;
-
+		ofs.write((char*)rgba, rgb_width * rgb_height * 4);
 	}
+
+	// RGBA转YUV420P
+	ofs.close();
+	ifs.close();
+
+	unsigned char* yuv_plane[3] = { 0 };
+	width = 800;
+	height = 600;
+	yuv_plane[0] = new unsigned char[width * height]; // Y
+	yuv_plane[1] = new unsigned char[width * height / 4]; // U
+	yuv_plane[2] = new unsigned char[width * height / 4]; // V
+	int yuv_plane_linesize[3] = { 800, 400, 400 };
+
+	ifs.open(RGBA_FILE, ios::binary);
+	ofs.open("800_600.yuv", ios::binary);
+	SwsContext* rgb2yuv = nullptr;
+	for (;;)
+	{
+		// 读取RGBA帧
+		ifs.read((char*)rgba, rgb_width * rgb_height * 4);
+		if (ifs.gcount() == 0) break;
+		rgb2yuv = sws_getCachedContext(
+			rgb2yuv,
+			rgb_width, rgb_height,
+			AV_PIX_FMT_RGBA,
+			width, height,
+			AV_PIX_FMT_YUV420P,
+			SWS_BILINEAR,
+			0, 0, 0
+		);
+		if (!rgb2yuv)
+		{
+			cout << "sws_getCachedContext failed!" << endl;
+			return -1;
+		}
+
+		unsigned char* data[1];
+		data[0] = rgba;
+		int lines[1] = { rgba_linesize };
+		int result = sws_scale(rgb2yuv,
+			data,			// 输入数据
+			lines,   // 输入数据行字节数
+			0,				// 开始处理的行
+			rgb_height,			// 需要处理的行
+			yuv_plane,			// 输出数据
+			yuv_plane_linesize			// 输出数据步长
+		);
+
+		cout << "rgb2yuv" << endl;
+		cout << result << " " << flush;
+		ofs.write((char*)yuv_plane[0], width * height);
+		ofs.write((char*)yuv_plane[1], width * height / 4);
+		ofs.write((char*)yuv_plane[2], width * height / 4);
+	}
+
+	ofs.close();
+	ifs.close();
 
 	delete yuv[0];
 	delete yuv[1];
 	delete yuv[2];
 	delete rgba;
+	delete yuv_plane[0];
+	delete yuv_plane[1];
+	delete yuv_plane[2];
+
 	return 0;
 }
