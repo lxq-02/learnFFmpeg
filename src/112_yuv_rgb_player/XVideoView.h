@@ -1,7 +1,13 @@
 #pragma once
 
 #include <mutex>
+#include <fstream>
 struct AVFrame;
+
+void MSleep(unsigned int ms);
+
+// 获取当前时间戳 毫秒
+long long NowMs();
 
 /*
 * 视频渲染接口类
@@ -12,11 +18,12 @@ struct AVFrame;
 class XVideoView
 {
 public:
-	enum Format
+	enum Format // 枚举的值和ffmpeg中值一致
 	{
-		RGBA = 0,
-		ARGB,
-		YUV420P
+		YUV420P = 0,
+		ARGB = 25,
+		RGBA = 26,
+		BGRA = 28
 	};
 
 	enum RenderType
@@ -35,8 +42,7 @@ public:
 	* @return 是否创建成功
 	*/
 	virtual bool Init(int w, int h,
-		Format fmt = RGBA,
-		void* win_id = nullptr) = 0;
+		Format fmt = RGBA) = 0;
 
 	// 清理所有申请的资源，包括关闭窗口
 	virtual void Close() = 0;
@@ -68,7 +74,15 @@ public:
 	bool DrawFrame(AVFrame* frame);
 
 	int render_fps() { return _render_fps; }
+
+	// 打开文件
+	bool Open(std::string filepath);
+	// 读取一帧数据，并维护AVFrame空间
+	// 每次调用会覆盖上一次数据
+	AVFrame* Read();
+	void set_win_id(void* win) { _win_id = win; }
 protected:
+	void* _win_id = nullptr;		// 窗口句柄
 	int _render_fps = 0; // 显示帧率
 	int _width = 0;
 	int _height = 0;
@@ -80,5 +94,9 @@ protected:
 	
 	std::chrono::steady_clock::time_point _beg_ms;	// 计时开始时间
 	int _count = 0;	// 统计显示次数
+
+private:
+	std::ifstream _ifs; 
+	AVFrame* _frame = nullptr;
 };
 

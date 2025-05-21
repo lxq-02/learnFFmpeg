@@ -23,8 +23,7 @@ public:
 	* @return 是否创建成功
 	*/
 	bool Init(int w, int h,
-		Format fmt = RGBA,
-		void* win_id = nullptr) override;
+		Format fmt = RGBA) override;
 
 	/*
 	* 渲染图像，线程安全

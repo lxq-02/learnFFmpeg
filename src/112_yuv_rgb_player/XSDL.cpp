@@ -53,7 +53,7 @@ bool XSDL::IsExit()
     return false;
 }
 
-bool XSDL::Init(int w, int h, Format fmt, void* win_id)
+bool XSDL::Init(int w, int h, Format fmt)
 {
     if (w <= 0 || h <= 0) return false;
     // 初始化SDL视频库
@@ -68,7 +68,7 @@ bool XSDL::Init(int w, int h, Format fmt, void* win_id)
     // 1、创建窗口
     if (!_window)
     {
-        if (!win_id)
+        if (!_win_id)
         {
             // 新建窗口
             _window = SDL_CreateWindow("",
@@ -80,7 +80,7 @@ bool XSDL::Init(int w, int h, Format fmt, void* win_id)
         else
         {
             // 渲染到控件窗口
-            _window = SDL_CreateWindowFrom(win_id);
+            _window = SDL_CreateWindowFrom(_win_id);
         }
     }
     if (!_window)
@@ -103,7 +103,16 @@ bool XSDL::Init(int w, int h, Format fmt, void* win_id)
     auto sdl_fmt = SDL_PIXELFORMAT_ABGR8888;
     switch (_fmt)
     {
-    case YUV420P:
+    case XVideoView::RGBA:
+        sdl_fmt = SDL_PIXELFORMAT_RGBA32;
+        break;
+    case XVideoView::BGRA:
+        sdl_fmt = SDL_PIXELFORMAT_BGRA32;
+        break;
+    case XVideoView::ARGB:
+        sdl_fmt = SDL_PIXELFORMAT_ARGB32;
+        break;
+    case XVideoView::YUV420P:
         sdl_fmt = SDL_PIXELFORMAT_IYUV;
         break;
     default:

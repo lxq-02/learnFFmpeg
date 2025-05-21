@@ -9,6 +9,9 @@
 #include <QSpinBox>
 #include <QFileDialog>
 #include <iostream>
+#include <vector>
+#include <QString>
+#include <sstream>
 
 using namespace std;
 
@@ -22,29 +25,7 @@ extern "C"
 #define FILENAME "./video.yuv"
 #define PIXEL_FORMAT SDL_PIXELFORMAT_IYUV
 
-static XVideoView* view = nullptr;
-static AVFrame* frame = nullptr;
-static long long yuv_size = 0;
-static QLabel* view_fps = nullptr;	// 显示fps控件
-static QSpinBox* set_fps = nullptr; // 设置fps控件
-int fps = 0;
-
-void MSleep(unsigned int ms)
-{
-	auto beg = chrono::high_resolution_clock::now();
-	while (true)
-	{
-		auto now = chrono::high_resolution_clock::now();
-		auto elapsed = chrono::duration_cast<chrono::milliseconds>(now - beg).count();
-		if (elapsed >= ms) break;
-
-		// 剩余时间 >1ms 才 sleep
-		if (ms - elapsed > 1) 
-		{
-			this_thread::sleep_for(chrono::milliseconds(1));
-		}
-	}
-}
+static std::vector<XVideoView*> views;
 
 SdlQtRGB::SdlQtRGB(QWidget *parent)
 	: QWidget(parent)
@@ -57,7 +38,14 @@ SdlQtRGB::SdlQtRGB(QWidget *parent)
 	timeBeginPeriod(1);
 
 	connect(this, &SdlQtRGB::ViewS, this, &SdlQtRGB::View);
+	connect(ui.open1, &QPushButton::clicked, this, &SdlQtRGB::Open1);
+	connect(ui.open2, &QPushButton::clicked, this, &SdlQtRGB::Open2);
+	views.push_back(XVideoView::Create());
+	views.push_back(XVideoView::Create());
+	views[0]->set_win_id((void*)ui.video1->winId());
+	views[1]->set_win_id((void*)ui.video2->winId());
 
+	
 	_th = std::thread(&SdlQtRGB::Main, this);
 }
 
@@ -88,6 +76,33 @@ void SdlQtRGB::resizeEvent(QResizeEvent* ev)
 
 void SdlQtRGB::View()	// 显示的槽函数
 {
+	// 存放上次渲染的时间戳
+	static int last_pts[32] = { 0 };
+	static int fps_arr[32] = { 0 };
+	fps_arr[0] = ui.fps1->value();
+	fps_arr[1] = ui.fps2->value();
+	for (int i = 0; i < views.size(); ++i)
+	{
+		if (fps_arr[i] <= 0) continue;
+		// 需要间隔时间
+		int ms = 1000 / fps_arr[i];
+
+		// 判断是否到了可渲染时间
+		if (NowMs() - last_pts[i] < ms)
+			continue;
+		last_pts[i] = NowMs();
+
+		auto frame = views[i]->Read();
+		if (!frame) continue;
+		views[i]->DrawFrame(frame);
+		// 显示fps
+		stringstream ss;
+		ss << "fps: " << views[i]->render_fps();
+		if (i == 0)
+			ui.show_fps1->setText(ss.str().c_str());
+		else
+			ui.show_fps1_2->setText(ss.str().c_str());
+	}
 }
 
 void SdlQtRGB::Main()
@@ -95,7 +110,7 @@ void SdlQtRGB::Main()
 	while (!_is_exit)
 	{
 		emit ViewS();
-		MSleep(1);
+		MSleep(10);
 	}
 }
 
@@ -115,4 +130,44 @@ void SdlQtRGB::Open(int i)
 	auto filename = fd.getOpenFileName();
 	if (filename.isEmpty()) return;
 	cout << filename.toLocal8Bit().data() << endl;
+
+	// 打开文件
+	if (!views[i]->Open(filename.toStdString()))
+	{
+		return;
+	}
+	// 初始化窗口和纹理
+	int w = 0;
+	int h = 0;
+	QString pix = 0; // YUV420P RGBA
+	if (i == 0)
+	{
+		w = ui.width1->value();
+		h = ui.height1->value();
+		pix = ui.pix1->currentText();
+	}
+	else
+	{
+		w = ui.width2->value();
+		h = ui.height2->value();
+		pix = ui.pix2->currentText();
+	}
+	XVideoView::Format fmt = XVideoView::YUV420P;
+	if (pix == "YUV420P")
+	{
+		fmt = XVideoView::YUV420P;
+	}
+	else if (pix == "RGBA")
+	{
+		fmt = XVideoView::RGBA;
+	}
+	else if (pix == "ARGB")
+	{
+		fmt = XVideoView::ARGB;
+	}
+	else if (pix == "BGRA")
+	{
+		fmt = XVideoView::BGRA;
+	}
+	views[i]->Init(w, h, fmt);
 }
