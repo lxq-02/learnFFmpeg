@@ -123,6 +123,11 @@
      <string>BGRA</string>
     </property>
    </item>
+   <item>
+    <property name="text">
+     <string>RGB24</string>
+    </property>
+   </item>
   </widget>
   <widget class="QSpinBox" name="width1">
    <property name="geometry">
@@ -208,6 +213,11 @@
    <item>
     <property name="text">
      <string>BGRA</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>RGB24</string>
     </property>
    </item>
   </widget>

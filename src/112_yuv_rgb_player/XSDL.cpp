@@ -115,6 +115,9 @@ bool XSDL::Init(int w, int h, Format fmt)
     case XVideoView::YUV420P:
         sdl_fmt = SDL_PIXELFORMAT_IYUV;
         break;
+    case XVideoView::RGB24:
+        sdl_fmt = SDL_PIXELFORMAT_RGB24;
+        break;
     default:
         break;
     }

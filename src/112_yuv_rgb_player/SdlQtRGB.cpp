@@ -169,5 +169,9 @@ void SdlQtRGB::Open(int i)
 	{
 		fmt = XVideoView::BGRA;
 	}
+	else if (pix == "RGB24")
+	{
+		fmt = XVideoView::RGB24;
+	}
 	views[i]->Init(w, h, fmt);
 }

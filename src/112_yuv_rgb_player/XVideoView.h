@@ -21,6 +21,7 @@ public:
 	enum Format // 枚举的值和ffmpeg中值一致
 	{
 		YUV420P = 0,
+		RGB24 = 2,
 		ARGB = 25,
 		RGBA = 26,
 		BGRA = 28

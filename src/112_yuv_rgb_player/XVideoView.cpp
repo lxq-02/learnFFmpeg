@@ -86,6 +86,7 @@ bool XVideoView::DrawFrame(AVFrame* frame)
     case AV_PIX_FMT_BGRA:
     case AV_PIX_FMT_RGBA:
     case AV_PIX_FMT_ARGB:
+    case AV_PIX_FMT_RGB24:
         return Draw(frame->data[0], frame->linesize[0]);
     defautl:
         break;
@@ -131,6 +132,10 @@ AVFrame* XVideoView::Read()
             _frame->linesize[1] = _width / 2; // U
             _frame->linesize[2] = _width / 2; // V
         }
+        else if (_frame->format == AV_PIX_FMT_RGB24)
+        {
+            _frame->linesize[0] = _width * 3;
+        }
         // 生成AVFrame空间，使用默认对齐
         auto re = av_frame_get_buffer(_frame, 0);
         if (re != 0)
@@ -152,7 +157,7 @@ AVFrame* XVideoView::Read()
         _ifs.read((char*)_frame->data[1], _frame->linesize[1] * _frame->height / 2); // U
         _ifs.read((char*)_frame->data[2], _frame->linesize[2] * _frame->height / 2); // V
     }
-    else // RGBA ARGB BGRA 32
+    else // RGBA ARGB BGRA 32 RGB24
     {
         _ifs.read((char*)_frame->data[0], _frame->linesize[0] * _frame->height);
     }
