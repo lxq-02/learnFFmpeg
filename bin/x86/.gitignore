@@ -2,3 +2,6 @@
 *.yuv
 *.rgb
 *.rgba
+*.pdb
+*.h264
+*.h265
