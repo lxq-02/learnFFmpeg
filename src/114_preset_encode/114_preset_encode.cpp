@@ -59,8 +59,38 @@ int main(int argc, char* argv[])
 	ctx->pix_fmt = AV_PIX_FMT_YUV420P;
 	ctx->thread_count = 16; // 编码线程数，可以通过调用系统接口获取CPU核心数量
 
-	// 预设编码器参数
-	av_opt_set(ctx->priv_data, "preset", "ultrafast", 0); // 最快速度
+	//// 预设编码器参数
+	//ctx->max_b_frames = 0; // B帧设为0 降低延时，增大空间
+	//int opt_re = av_opt_set(ctx->priv_data, "preset", "ultrafast", 0); // 最快速度
+	//if (opt_re != 0)
+	//{
+	//	cout << "preset failed!" << endl;
+	//}
+	//opt_re = av_opt_set(ctx->priv_data, "tune", "zerolatency", 0);	// 零延时 h265不支持b frame
+	//if (opt_re != 0)
+	//{
+	//	cout << "preset failed!" << endl;
+	//}
+
+	///////////////////////////////////
+	/// ABR 平均比特率
+	int br = 400000;	// 400kb
+	//ctx->bit_rate = br;
+
+	///////////////////////////////////
+	/// CQP    H.264中的QP范围从0到51
+	/// x264默认 23   效果较好18
+	/// x265默认 28   效果较好25
+	//av_opt_set_int(ctx->priv_data, "qp", 51, 0);
+
+	///////////////////////////////////
+	/// 恒定比特率 （CBR）
+	ctx->rc_min_rate = br;
+	ctx->rc_max_rate = br;
+	ctx->rc_buffer_size = br;
+	ctx->bit_rate = br;
+	av_opt_set(ctx->priv_data, "nal-hrd", "cbr", 0);
+
 
 	// 3、打开编码器
 	int ret = avcodec_open2(ctx, codec, NULL);
