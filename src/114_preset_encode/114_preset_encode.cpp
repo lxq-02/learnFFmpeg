@@ -85,12 +85,21 @@ int main(int argc, char* argv[])
 
 	///////////////////////////////////
 	/// 恒定比特率 （CBR）
-	ctx->rc_min_rate = br;
-	ctx->rc_max_rate = br;
-	ctx->rc_buffer_size = br;
-	ctx->bit_rate = br;
-	av_opt_set(ctx->priv_data, "nal-hrd", "cbr", 0);
+	//ctx->rc_min_rate = br;
+	//ctx->rc_max_rate = br;
+	//ctx->rc_buffer_size = br;
+	//ctx->bit_rate = br;
+	//av_opt_set(ctx->priv_data, "nal-hrd", "cbr", 0);
 
+	///////////////////////////////////
+	/// 恒定速率因子（CRF）
+	av_opt_set_int(ctx->priv_data, "crf", 23, 0); // 23-28之间，数值越小质量越好，文件越大
+
+	///////////////////////////////////
+	/// 约束编码（VBV）Constrained Encoding (VBV)
+	av_opt_set_int(ctx->priv_data, "crf", 23, 0); // 23-28之间，数值越小质量越好，文件越大
+	ctx->rc_max_rate = br;
+	ctx->rc_buffer_size = br * 2;
 
 	// 3、打开编码器
 	int ret = avcodec_open2(ctx, codec, NULL);
