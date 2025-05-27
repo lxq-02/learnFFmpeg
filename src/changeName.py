@@ -26,7 +26,7 @@ def change_name():
     # 2、更改4个文件名
     old_file_prefix = old_folder_name.replace(" - 副本", "")
     new_file_prefix = new_folder_name
-    extensions = ['.sln', '.vcxproj', '.vcxproj.filters', '.vcxproj.user', '.cpp']
+    extensions = ['.sln', '.vcxproj', '.vcxproj.filters', '.vcxproj.user']
     # 2.1 .sln
     # 2.2 .vcxproj
     # 2.3 .vcxproj.filters
