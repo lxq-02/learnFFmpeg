@@ -35,3 +35,12 @@ bool XDemux::Read(AVPacket* pkt)
 	BERR(re);
 	return true;
 }
+
+bool XDemux::Seek(long long pts, int stream_index)
+{
+	unique_lock<mutex> lock(_mtx);
+	if (!_ctx) return false;
+	auto re = av_seek_frame(_ctx, stream_index, pts, AVSEEK_FLAG_BACKWARD | AVSEEK_FLAG_FRAME);
+	BERR(re);
+	return true;
+}

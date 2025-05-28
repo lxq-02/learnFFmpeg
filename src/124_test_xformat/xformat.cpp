@@ -88,3 +88,23 @@ void XFormat::set_ctx(AVFormatContext* ctx)
 		}
 	}
 }
+
+bool XFormat::RescaleTime(AVPacket* pkt, long long offset_pts, XRational time_base)
+{
+	unique_lock<mutex> lock(_mtx);
+	if (!_ctx) return false;
+
+	auto out_stream = _ctx->streams[pkt->stream_index];
+	AVRational in_time_base = { time_base.num, time_base.den }; // 输入时间基准
+
+	// 重新计算pts dts duration
+	// a * bq (输入basetime）/ cq（输出basetime） = a * bq / cq
+	pkt->pts = av_rescale_q_rnd(pkt->pts - offset_pts, in_time_base,
+		out_stream->time_base, (AVRounding)(AV_ROUND_NEAR_INF | AV_ROUND_PASS_MINMAX));
+	pkt->dts = av_rescale_q_rnd(pkt->dts - offset_pts, in_time_base,
+		out_stream->time_base, (AVRounding)(AV_ROUND_NEAR_INF | AV_ROUND_PASS_MINMAX));
+	pkt->duration = av_rescale_q(pkt->duration, in_time_base,
+		out_stream->time_base);
+	pkt->pos = -1; // 重置pos为-1，表示未知位置
+	return true;
+}

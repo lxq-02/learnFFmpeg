@@ -19,5 +19,7 @@ public:
 	 * @return  ÊÇ·ñ³É¹¦
 	 */
 	bool Read(AVPacket* pkt);
+
+	bool Seek(long long pts, int stream_index);
 };
 

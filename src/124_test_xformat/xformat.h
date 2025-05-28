@@ -49,6 +49,13 @@ public:
 	int video_index() { return _video_index; }	// 获取视频流索引
 	XRational video_time_base() { return _video_time_base; }	// 获取视频流时间基准
 	XRational audio_time_base() { return _audio_time_base; }	// 获取音频流时间基准
+
+	/**
+	 * 根据timebase计算时间
+	 * 
+	 * @return 
+	 */
+	bool RescaleTime(AVPacket* pkt, long long offset_pts, XRational time_base);
 protected:
 	AVFormatContext* _ctx = nullptr;	// 封装解封装上下文
 	std::mutex _mtx;					// 互斥锁，保护_ctx的多线程安全
@@ -56,5 +63,5 @@ protected:
 	int _video_index = 0;	// video和audio在streams中的索引
 	int _audio_index = 1;
 	XRational _video_time_base = { 1, 25 };	// 视频流时间基准，默认25fps
-	XRational _audio_time_base = { 1, 44100 };	// 音频流时间基准，默认44100Hz
+	XRational _audio_time_base = { 1, 48000 };	// 音频流时间基准，默认48000Hz
 };
