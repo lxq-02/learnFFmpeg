@@ -135,10 +135,12 @@
     <ClCompile Include="124_test_xformat.cpp" />
     <ClCompile Include="xdemux.cpp" />
     <ClCompile Include="xformat.cpp" />
+    <ClCompile Include="xmux.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="xdemux.h" />
     <ClInclude Include="xformat.h" />
+    <ClInclude Include="xmux.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

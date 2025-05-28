@@ -1,6 +1,7 @@
 #include <iostream>
 #include <thread>
 #include "xdemux.h"
+#include "xmux.h"
 using namespace std;
 
 
@@ -19,92 +20,40 @@ int main(int argc, char* argv[])
 
 	demux.set_ctx(demux_c); // 设置上下文到XDemux类中
 
-
-	//AVFormatContext* ic = nullptr;
-	//auto re = avformat_open_input(&ic, url,
-	//	NULL,			// 封装器格式 null 自动探测 根据后缀名或者文件头
-	//	NULL			// 参数设置，rtsp需要设置		
-	//);
-	//CERR(re);
-
-	//// 2、获取媒体信息 无头部格式
-	//re = avformat_find_stream_info(ic, NULL);
-	//CERR(re);
-
-	//// 打印封装信息
-	//av_dump_format(ic, 0, url,
-	//	0 // 0表示上下文是输入 1输出
-	//);
-
-	//AVStream* as = nullptr; // 音频流
-	//AVStream* vs = nullptr; // 视频流
-	//for (int i = 0; i < ic->nb_streams; ++i)
-	//{
-	//	// 音频
-	//	if (ic->streams[i]->codecpar->codec_type == AVMEDIA_TYPE_AUDIO)
-	//	{
-	//		as = ic->streams[i];
-	//		cout << "=============音频===============" << endl;
-	//		cout << "sample_rate:" << as->codecpar->sample_rate << endl;
-	//	}
-	//	else if (ic->streams[i]->codecpar->codec_type == AVMEDIA_TYPE_VIDEO)
-	//	{
-	//		vs = ic->streams[i];
-	//		cout << "=============视频===============" << endl;
-	//		cout << "width:" << vs->codecpar->width << endl;
-	//		cout << "height:" << vs->codecpar->height << endl;
-	//	}
-	//}
 	////////////////////////////////////////////////////////////////////////////
 	
 	////////////////////////////////////////////////////////////////////////////
 	/// 封装
 	// 上下文
-	const char* out_url = "test_out.mp4";
-	AVFormatContext* ec = nullptr;
-	auto re = avformat_alloc_output_context2(&ec, NULL, NULL, 
-		out_url // 根据文件名推测封装格式
-	);
-	CERR(re);
-	// 添加视频流、音频流
-	auto mvs = avformat_new_stream(ec, NULL);	// 视频流
-	auto mas = avformat_new_stream(ec, NULL);	// 音频流
+	const char* out_url = "test_mux.mp4";
 
-	// 打开输出IO
-	re = avio_open(&ec->pb, out_url, AVIO_FLAG_WRITE);
-	CERR(re);
+	XMux mux; // 使用XMux类
+	auto mux_c = mux.Open(out_url); // 打开封装输出上下文
+	mux.set_ctx(mux_c);
+	auto mvs = mux_c->streams[mux.video_index()]; // 视频流
+	auto mas = mux_c->streams[mux.audio_index()]; // 音频流
 
-	// 设置编码音视频流参数
-	//ec->streams[0]；
-	//mvs->codecpar;// 视频流参数
-	//if (vs)
-	//{
-	//	mvs->time_base = vs->time_base; // 视频流时间基准，与原视频一致
-	//	// 从解封装复制参数
-	//	avcodec_parameters_copy(mvs->codecpar, vs->codecpar);
-	//}
-	mvs->time_base.num = demux.video_time_base().num;
-	mvs->time_base.den = demux.video_time_base().den; // 视频流时间基准，与原视频一致
+	// 有视频
+	if (demux.video_index() >= 0)
+	{
+		mvs->time_base.num = demux.video_time_base().num; // 视频流时间基准，与原视频一致
+		mvs->time_base.den = demux.video_time_base().den; // 视频流时间基准，与原视频一致
+		demux.CopyPara(demux.video_index(), mvs->codecpar); // 复制视频流参数
+	}
+	// 有音频
+	if (demux.audio_index() >= 0)
+	{
+		mas->time_base.num = demux.audio_time_base().num; // 音频流时间基准，与原音频一致
+		mas->time_base.den = demux.audio_time_base().den; // 音频流时间基准，与原音频一致
+		demux.CopyPara(demux.audio_index(), mas->codecpar); // 复制音频流参数
+	}
 
-	mas->time_base.num = demux.audio_time_base().num;
-	mas->time_base.den = demux.audio_time_base().den; 
+	mux.WriteHead();
 
-	demux.CopyPara(demux.video_index(), mvs->codecpar); // 复制视频流参数到XDemux类中
-	demux.CopyPara(demux.audio_index(), mas->codecpar); // 复制音频流参数到XDemux类中
-	//if (as)
-	//{
-	//	mas->time_base = as->time_base; // 音频流时间基准，与原音频一致
-	//	// 从解封装复制参数
-	//	avcodec_parameters_copy(mas->codecpar, as->codecpar);
-	//}
+	//// 写入头部信息
+	//re = avformat_write_header(ec, NULL);
+	//CERR(re);
 
-	// 写入头部信息
-	re = avformat_write_header(ec, NULL);
-	CERR(re);
-
-	av_dump_format(ec, 0, out_url, 1); // 打印封装信息
-	
-	
 	////////////////////////////////////////////////////////////////////////////
 	
 	////////////////////////////////////////////////////////////////////////////
@@ -185,33 +134,31 @@ int main(int argc, char* argv[])
 		//	out_stream->time_base, (AVRounding)(AV_ROUND_NEAR_INF | AV_ROUND_PASS_MINMAX));
 		//pkt.duration = av_rescale_q(pkt.duration, in_stream->time_base,
 		//	out_stream->time_base);
-		//pkt.pos = -1; // 重置pos为-1，表示未知位置
+		pkt.pos = -1; // 重置pos为-1，表示未知位置
 
 
 
 
 		// 写入音视频帧 会清理pkt
-		re = av_interleaved_write_frame(ec, &pkt);
-		if (re != 0)
-		{
-			PrintErr(re);
-		}
+		mux.Write(&pkt); // 使用XMux类写入
 		//av_packet_unref(&pkt);
 		//this_thread::sleep_for(chrono::milliseconds(100));
 	}
 
-	// 写入尾部信息 包含文件偏移
-	re = av_write_trailer(ec);
-	if (re != 0)
-	{
-		PrintErr(re);
-	}
+	//// 写入尾部信息 包含文件偏移
+	//re = av_write_trailer(ec);
+	//if (re != 0)
+	//{
+	//	PrintErr(re);
+	//}
+	mux.WriteEnd(); // 使用XMux类写入尾部信息
 
 	//avformat_close_input(&ic);
 	demux.set_ctx(nullptr); // 清理XDemux类中的上下文
+	mux.set_ctx(nullptr);
 
-	avio_closep(&ec->pb);
-	avformat_free_context(ec);
-	ec = nullptr;
+	//avio_closep(&ec->pb);
+	//avformat_free_context(ec);
+	//ec = nullptr;
 	return 0;
 }

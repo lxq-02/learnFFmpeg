@@ -24,12 +24,18 @@
     <ClCompile Include="xdemux.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="xmux.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="xformat.h">
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="xdemux.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="xmux.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>

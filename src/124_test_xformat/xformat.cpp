@@ -65,6 +65,9 @@ void XFormat::set_ctx(AVFormatContext* ctx)
 	}
 	_ctx = ctx; // 设置新值
 	if (!_ctx) return;
+	// 用于区分是否有音频或者视频流
+	_audio_index = -1;
+	_video_index = -1;
 
 
 	// 区分音视频索引
@@ -74,10 +77,14 @@ void XFormat::set_ctx(AVFormatContext* ctx)
 		if (ctx->streams[i]->codecpar->codec_type == AVMEDIA_TYPE_AUDIO)
 		{
 			_audio_index = i;
+			_audio_time_base.den = ctx->streams[i]->time_base.den; // 音频流时间基准
+			_audio_time_base.num = ctx->streams[i]->time_base.num; // 音频流时间基准
 		}
 		else if (ctx->streams[i]->codecpar->codec_type == AVMEDIA_TYPE_VIDEO)
 		{
 			_video_index = i;
+			_video_time_base.den = ctx->streams[i]->time_base.den; // 视频流时间基准
+			_video_time_base.num = ctx->streams[i]->time_base.num; // 视频流时间基准
 		}
 	}
 }
