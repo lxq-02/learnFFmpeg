@@ -23,5 +23,7 @@ public:
 private:
 	std::mutex mtx_;	// 线程安全锁
 	XDecode decode_;
+	XAVPacketList pkt_list_; // AVPacket 列表，用于存储解码数据
+	AVFrame* frame_ = nullptr; // 解码后存储
 };
 
