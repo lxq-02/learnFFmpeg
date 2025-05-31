@@ -26,7 +26,7 @@ def change_name():
     # 2、更改4个文件名
     old_file_prefix = old_folder_name.replace(" - 副本", "")
     new_file_prefix = new_folder_name
-    extensions = ['.sln', '.vcxproj', '.vcxproj.filters', '.vcxproj.user']
+    extensions = ['.sln', '.vcxproj', '.vcxproj.filters', '.vcxproj.user', '.cpp']
     # 2.1 .sln
     # 2.2 .vcxproj
     # 2.3 .vcxproj.filters
@@ -41,18 +41,19 @@ def change_name():
         else:
             print(f"未找到文件:{old_filename}")
 
-    # 3、替换.sln中的字符串
-    sln_file = f"{new_folder_name}.sln"
-    # 读取文件内容
-    with open(sln_file, 'r', encoding='utf-8') as f:
-        content = f.read()
+    # 3、替换内部中的字符串
+    in_extensions = ['.sln', '.vcxproj', '.vcxproj.filters']
+    for in_extension in in_extensions:
+        in_filename = f"{new_folder_name}{in_extension}"
+        with open(in_filename, 'r', encoding='utf-8') as f:
+            content = f.read()
 
-    old_str = old_file_prefix
-    new_str = new_folder_name
-    new_content = content.replace(old_str, new_str)
+        old_str = old_file_prefix
+        new_str = new_folder_name
+        new_content = content.replace(old_str, new_str)
 
-    with open(sln_file, 'w', encoding='utf-8') as f:
-        f.write(new_content)
+        with open(in_filename, 'w', encoding='utf-8') as f:
+            f.write(new_content)
 
     # 4、回到上一层位置，改文件名
     os.chdir('..')
