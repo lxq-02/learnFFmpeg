@@ -8,13 +8,14 @@
 using namespace std;
 
 #define CAM1 "rtsp://127.0.0.1/test"
+#define CAM2 "test.mp4"
 
 int main(int argc, char* argv[])
 {
 	XDemuxTask demux_task;
 	for (;;)
 	{
-		if (demux_task.Open(CAM1))
+		if (demux_task.Open(CAM2))
 		{
 			break;
 		}
