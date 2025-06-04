@@ -17,6 +17,7 @@
 #include "xcamera_config.h"
 #include "xcamera_widget.h"
 #include "xcamera_record.h"
+#include "xplayvideo.h"
 using namespace std;
 
 #define CAM_CONF_PATH "cams.db"
@@ -106,7 +107,7 @@ XViewer::XViewer(QWidget *parent)
 
     // Æô¶¯¶¨Ê±Æ÷äÖÈ¾ÊÓÆµ
     startTimer(1);
-    Playback(); // Ä¬ÈÏÏÔÊ¾Ô¤ÀÀ
+    Preview(); // Ä¬ÈÏÏÔÊ¾Ô¤ÀÀ
 }
 
 XViewer::~XViewer()
@@ -505,4 +506,7 @@ void XViewer::PlayVideo(QModelIndex index)
     if (!item) return;
 	QString path = item->data(Qt::UserRole).toString();
     qDebug() << path;
+    static XPlayVideo play;
+	play.Open(path.toStdString().c_str());
+    play.show();
 }

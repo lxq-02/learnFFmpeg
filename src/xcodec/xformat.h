@@ -55,6 +55,8 @@ public:
 	 */
 	bool RescaleTime(AVPacket* pkt, long long offset_pts, XRational time_base);
 	bool RescaleTime(AVPacket* pkt, long long offset_pts, AVRational* time_base);
+	// 把pts dts duration值转换为毫秒
+	long long RescaleToMs(long long pts, int index);
 
 	int video_codec_id() const { return video_codec_id_; }	// 获取视频编解码器ID
 

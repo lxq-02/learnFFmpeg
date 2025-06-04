@@ -104,12 +104,14 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <QtRcc Include="xviewer.qrc" />
+    <QtUic Include="xplayvideo.ui" />
     <QtUic Include="xviewer.ui" />
     <QtMoc Include="xviewer.h" />
     <ClCompile Include="xcalendar.cpp" />
     <ClCompile Include="xcamera_config.cpp" />
     <ClCompile Include="xcamera_record.cpp" />
     <ClCompile Include="xcamera_widget.cpp" />
+    <ClCompile Include="xplayvideo.cpp" />
     <ClCompile Include="xviewer.cpp" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>
@@ -118,6 +120,7 @@
     <ClInclude Include="xcalendar.h" />
     <ClInclude Include="xcamera_config.h" />
     <ClInclude Include="xcamera_record.h" />
+    <QtMoc Include="xplayvideo.h" />
     <QtMoc Include="xcamera_widget.h" />
   </ItemGroup>
   <ItemGroup>
