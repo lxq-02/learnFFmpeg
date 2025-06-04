@@ -1,6 +1,5 @@
 <RCC>
-    <qresource prefix="/XViewer"/>
-    <qresource prefix="/XViewe">
+    <qresource prefix="/XViewer">
         <file>img/cam.png</file>
         <file>img/close.png</file>
         <file>img/logo.png</file>

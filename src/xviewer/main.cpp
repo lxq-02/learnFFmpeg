@@ -11,7 +11,7 @@ using namespace std;
 
 int main(int argc, char *argv[])
 {
-    auto* xc = XCameraConfig::Instance();
+    /*auto* xc = XCameraConfig::Instance();
     xc->Load(TEST_CAM_PATH);
     {
         XCameraData cd;
@@ -67,7 +67,7 @@ int main(int argc, char *argv[])
     {
         auto cam = xc->GetCam(i);
         qDebug() << cam.name_;
-    }
+    }*/
     QApplication a(argc, argv);
     XViewer w;
     w.show();

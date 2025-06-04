@@ -58,7 +58,7 @@ bool XCameraConfig::Save(const char* path)
 	{
 		ofs.write((char*) & cam, sizeof(cam));
 	}
-	
+	ofs.close();
 	return true;
 }
 
@@ -81,6 +81,6 @@ bool XCameraConfig::Load(const char* path)
 		}
 		cams_.push_back(data);
 	}
-
+	ifs.close();
 	return true;
 }

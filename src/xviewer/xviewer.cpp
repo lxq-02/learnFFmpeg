@@ -1,4 +1,5 @@
 #include "xviewer.h"
+#include <QLineEdit>
 #include <QGridLayout>
 #include <QResizeEvent>
 #include <QVBoxLayout>
@@ -6,9 +7,15 @@
 #include <QString>
 #include <QDebug>
 #include <QContextMenuEvent>
+#include <QFormLayout>
+#include <QDialog>
+#include <QMessageBox>
+#include "xcamera_config.h"
+
+#define CAM_CONF_PATH "cams.db"
 
 // 解决中文乱码
-#define C(s) QString::fromLocal8Bit(s)
+#define C(s) QString::fromUtf8(s)
 
 static QWidget* cam_wids[16] = { 0 };
 
@@ -56,6 +63,10 @@ XViewer::XViewer(QWidget *parent)
 
     // 默认9窗口
     View9();
+
+    // 刷新左侧摄像机列表
+    XCameraConfig::Instance()->Load(CAM_CONF_PATH);
+    RefreshCams();
 }
 
 XViewer::~XViewer()
@@ -144,6 +155,19 @@ void XViewer::View(int count)
     }
 }
 
+void XViewer::RefreshCams()
+{
+    auto c = XCameraConfig::Instance();
+    ui->cam_list->clear();
+	int count = c->GetCamCount();
+    for (int i = 0; i < count; i++)
+    {
+        auto cam = c->GetCam(i);
+		auto item = new QListWidgetItem(QIcon(":/XViewer/img/cam.png"), C(cam.name_));
+        ui->cam_list->addItem(item);
+    }
+}
+
 void XViewer::MaxWindow()
 {
     ui->max->setVisible(false);
@@ -176,4 +200,60 @@ void XViewer::View9()
 void XViewer::View16()
 {
     View(16);
+}
+
+void XViewer::AddCam()
+{
+	QDialog dlg(this);
+    dlg.resize(800, 200);
+    QFormLayout lay;
+	dlg.setLayout(&lay);
+    // 标题1 输入框1
+	// 标题2 输入框2
+    QLineEdit name_edit;
+	lay.addRow(C("名称"), &name_edit);
+
+	QLineEdit url_edit;
+	lay.addRow(C("主码流"), &url_edit);
+
+	QLineEdit sub_url_edit;
+	lay.addRow(C("辅码流"), &sub_url_edit);
+
+	QLineEdit save_path_edit;
+	lay.addRow(C("保存路径"), &save_path_edit);
+
+    QPushButton save;
+	save.setText(C("保存"));
+
+	connect(&save, &QPushButton::clicked, &dlg, &QDialog::accept);
+
+	lay.addRow("", & save);
+    for (;;)
+    {
+        if (dlg.exec() == QDialog::Accepted) // 点击保存按钮
+        {
+			// 检查输入是否为空
+            if (name_edit.text().isEmpty()
+                || url_edit.text().isEmpty()
+                || sub_url_edit.text().isEmpty()
+                || save_path_edit.text().isEmpty())
+            {
+				QMessageBox::information(0, C("错误"), C("请填写完整的摄像机信息"));
+				continue; // 继续循环，重新显示对话框
+            }
+
+            break;
+        }
+        return;
+    }
+
+    XCameraData data;
+    strncpy_s(data.name_, sizeof(data.name_), name_edit.text().toStdString().c_str(), _TRUNCATE);
+    strncpy_s(data.url_, sizeof(data.url_), url_edit.text().toStdString().c_str(), _TRUNCATE);
+	strncpy_s(data.sub_url_, sizeof(data.sub_url_), sub_url_edit.text().toStdString().c_str(), _TRUNCATE);
+	strncpy_s(data.save_path_, sizeof(data.save_path_), save_path_edit.text().toStdString().c_str(), _TRUNCATE);
+
+    XCameraConfig::Instance()->Push(data);          // 插入数据
+    XCameraConfig::Instance()->Save(CAM_CONF_PATH); // 保存到文件
+    RefreshCams();  // 刷新显示
 }
