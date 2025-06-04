@@ -2,6 +2,7 @@
 #include <iostream>
 #include <QtWidgets/QApplication>
 #include <QDebug>
+#include "xcamera_record.h"
 
 #include "xcamera_config.h"
 using namespace std;
@@ -11,6 +12,12 @@ using namespace std;
 
 int main(int argc, char *argv[])
 {
+	XCameraRecord xr;
+    xr.set_rtsp_url("rtsp://127.0.0.1/test");
+	xr.set_save_path("./test_001.mp4");
+    xr.Start();
+
+
     /*auto* xc = XCameraConfig::Instance();
     xc->Load(TEST_CAM_PATH);
     {
