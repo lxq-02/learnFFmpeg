@@ -43,7 +43,7 @@ void XCameraRecord::Main()
 		{
 			break;
 		}
-		MSleep(10);
+		MSleep(3000);
 		continue;
 	}
 

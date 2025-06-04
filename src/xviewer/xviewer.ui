@@ -78,6 +78,13 @@ background-color: #252525;
 {
 background-color: #1e1e1e;
 }
+
+
+#status
+{
+	color:rgb(255,255,255);
+	font: 75 9pt &quot;AdOBE Arabic&quot;;
+}
 </string>
   </property>
   <widget class="QWidget" name="head" native="true">
@@ -203,6 +210,22 @@ background-color: #1e1e1e;
     <zorder>min</zorder>
     <zorder>normal</zorder>
     <zorder>max</zorder>
+   </widget>
+   <widget class="QLabel" name="status">
+    <property name="geometry">
+     <rect>
+      <x>230</x>
+      <y>0</y>
+      <width>200</width>
+      <height>40</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>监控中...</string>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+    </property>
    </widget>
   </widget>
   <widget class="QWidget" name="body" native="true">

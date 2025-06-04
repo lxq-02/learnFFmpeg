@@ -11,8 +11,12 @@
 #include <QDialog>
 #include <QMessageBox>
 #include <sstream>
+#include <QDir>
+#include <vector>
 #include "xcamera_config.h"
 #include "xcamera_widget.h"
+#include "xcamera_record.h"
+using namespace std;
 
 #define CAM_CONF_PATH "cams.db"
 
@@ -29,8 +33,11 @@ QString safeDecode(const char* s)
     return str;
 }
 
-
+// 渲染窗口
 static XCameraWidget* cam_wids[16] = { 0 };
+
+// 视频录制
+static std::vector<XCameraRecord*> records;
 
 
 XViewer::XViewer(QWidget *parent)
@@ -73,6 +80,11 @@ XViewer::XViewer(QWidget *parent)
     connect(a, SIGNAL(triggered()), this, SLOT(View9()));
     a = m->addAction(C("16窗口"));
     connect(a, SIGNAL(triggered()), this, SLOT(View16()));
+
+    a = left_menu_.addAction(C("全部开始录制"));
+	connect(a, SIGNAL(triggered()), this, SLOT(StartRecord()));
+	a = left_menu_.addAction(C("全部停止录制"));
+	connect(a, SIGNAL(triggered()), this, SLOT(StopRecord()));
 
     // 默认9窗口
     View9();
@@ -348,4 +360,43 @@ void XViewer::DelCam()
 
 	XCameraConfig::Instance()->DelCam(row);
     RefreshCams();
+}
+
+void XViewer::StartRecord()
+{
+    StopRecord();
+
+    qDebug() << "开始全部摄像头录制";
+    ui->status->setText(C("录制中..."));
+    // 获取配置列表
+    auto conf = XCameraConfig::Instance();
+	int count = conf->GetCamCount();
+    for (int i = 0; i < count; ++i)
+    {
+		auto cam = conf->GetCam(i); // 获取摄像机配置
+        std::stringstream ss;
+        ss << cam.save_path_ << "/" << i << "/";
+        QDir dir;
+		dir.mkpath(ss.str().c_str()); // 创建目录
+		XCameraRecord* rec = new XCameraRecord();
+		rec->set_rtsp_url(cam.url_);
+        rec->set_save_path(ss.str());
+		rec->set_file_sec(10); // 每10秒一个文件
+        rec->Start();
+        records.push_back(rec);
+
+    }
+    // 创建录制目录
+    // 分别开始录制线程
+}
+
+void XViewer::StopRecord()
+{
+    ui->status->setText(C("监控中..."));
+    for (auto rec : records)
+    {
+        rec->Stop();
+        delete rec;
+    }
+    records.clear();
 }
