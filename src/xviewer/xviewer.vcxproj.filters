@@ -46,6 +46,9 @@
     <ClCompile Include="xcamera_record.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="xcalendar.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="resource.h">
@@ -55,6 +58,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="xcamera_record.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="xcalendar.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

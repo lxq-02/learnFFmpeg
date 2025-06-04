@@ -106,6 +106,7 @@
     <QtRcc Include="xviewer.qrc" />
     <QtUic Include="xviewer.ui" />
     <QtMoc Include="xviewer.h" />
+    <ClCompile Include="xcalendar.cpp" />
     <ClCompile Include="xcamera_config.cpp" />
     <ClCompile Include="xcamera_record.cpp" />
     <ClCompile Include="xcamera_widget.cpp" />
@@ -114,6 +115,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="resource.h" />
+    <ClInclude Include="xcalendar.h" />
     <ClInclude Include="xcamera_config.h" />
     <ClInclude Include="xcamera_record.h" />
     <QtMoc Include="xcamera_widget.h" />
