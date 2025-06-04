@@ -55,6 +55,10 @@ public slots:
 	void StopRecord();  // 停止全部摄像头录制
     void Preview();     // 预览
     void Playback();    // 回放界面
+
+	void SelectCamera(QModelIndex index); // 选择摄像机
+	void SelectDate(QDate date);          // 选择日期
+    void PlayVideo(QModelIndex index);    // 选择时间播放视频
 private:
     Ui::XViewerClass *ui;
     QMenu left_menu_;
