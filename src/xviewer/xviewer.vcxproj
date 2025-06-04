@@ -60,7 +60,7 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|Win32'">
-    <OutDir>..\..\bin\x86</OutDir>
+    <OutDir>..\..\bin\x86\</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|Win32'">
   </PropertyGroup>
@@ -105,11 +105,13 @@
     <QtRcc Include="xviewer.qrc" />
     <QtUic Include="xviewer.ui" />
     <QtMoc Include="xviewer.h" />
+    <ClCompile Include="xcamera_config.cpp" />
     <ClCompile Include="xviewer.cpp" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="resource.h" />
+    <ClInclude Include="xcamera_config.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="xviewer.rc" />
