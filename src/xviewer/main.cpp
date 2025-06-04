@@ -17,10 +17,10 @@ int main(int argc, char *argv[])
     QDir dir;
 	dir.mkpath(save_path); // 确保目录存在
 
-	XCameraRecord xr;
-    xr.set_rtsp_url("rtsp://127.0.0.1/test");
-	xr.set_save_path(save_path);
-    xr.Start();
+	//XCameraRecord xr;
+ //   xr.set_rtsp_url("rtsp://127.0.0.1/test");
+	//xr.set_save_path(save_path);
+ //   xr.Start();
 
 
     /*auto* xc = XCameraConfig::Instance();
@@ -84,6 +84,6 @@ int main(int argc, char *argv[])
     XViewer w;
     w.show();
     auto re = a.exec();
-    xr.Stop();
+    //xr.Stop();
     return re;
 }

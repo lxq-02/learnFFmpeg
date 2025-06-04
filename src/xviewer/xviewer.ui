@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>800</width>
-    <height>600</height>
+    <width>796</width>
+    <height>672</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -85,7 +85,24 @@ background-color: #1e1e1e;
 	color:rgb(255,255,255);
 	font: 75 9pt &quot;AdOBE Arabic&quot;;
 }
-</string>
+
+/* tab菜单按钮切换样式 */
+#preview
+{
+background-color:rgb(50, 50,50);
+}
+#playback
+{
+background-color:rgb(50, 50,50);
+}
+#preview:checked
+{
+background-color:rgb(0, 102,184);
+}
+#playback:checked
+{
+background-color:rgb(0, 102,184);
+}</string>
   </property>
   <widget class="QWidget" name="head" native="true">
    <property name="geometry">
@@ -214,8 +231,8 @@ background-color: #1e1e1e;
    <widget class="QLabel" name="status">
     <property name="geometry">
      <rect>
-      <x>230</x>
-      <y>0</y>
+      <x>410</x>
+      <y>10</y>
       <width>200</width>
       <height>40</height>
      </rect>
@@ -227,14 +244,58 @@ background-color: #1e1e1e;
      <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
     </property>
    </widget>
+   <widget class="QPushButton" name="preview">
+    <property name="geometry">
+     <rect>
+      <x>180</x>
+      <y>25</y>
+      <width>90</width>
+      <height>30</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>预览</string>
+    </property>
+    <property name="checkable">
+     <bool>true</bool>
+    </property>
+    <property name="checked">
+     <bool>true</bool>
+    </property>
+    <property name="autoExclusive">
+     <bool>true</bool>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="playback">
+    <property name="geometry">
+     <rect>
+      <x>280</x>
+      <y>25</y>
+      <width>90</width>
+      <height>30</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>回放</string>
+    </property>
+    <property name="checkable">
+     <bool>true</bool>
+    </property>
+    <property name="checked">
+     <bool>false</bool>
+    </property>
+    <property name="autoExclusive">
+     <bool>true</bool>
+    </property>
+   </widget>
   </widget>
   <widget class="QWidget" name="body" native="true">
    <property name="geometry">
     <rect>
      <x>0</x>
      <y>50</y>
-     <width>800</width>
-     <height>600</height>
+     <width>801</width>
+     <height>621</height>
     </rect>
    </property>
    <widget class="QWidget" name="left" native="true">
@@ -336,6 +397,41 @@ background-color: #1e1e1e;
       <height>471</height>
      </rect>
     </property>
+   </widget>
+   <widget class="QWidget" name="playback_wid" native="true">
+    <property name="geometry">
+     <rect>
+      <x>219</x>
+      <y>19</y>
+      <width>571</width>
+      <height>531</height>
+     </rect>
+    </property>
+    <widget class="QCalendarWidget" name="cal">
+     <property name="geometry">
+      <rect>
+       <x>160</x>
+       <y>0</y>
+       <width>400</width>
+       <height>500</height>
+      </rect>
+     </property>
+    </widget>
+    <widget class="QListWidget" name="time_list">
+     <property name="geometry">
+      <rect>
+       <x>0</x>
+       <y>0</y>
+       <width>150</width>
+       <height>800</height>
+      </rect>
+     </property>
+     <item>
+      <property name="text">
+       <string>20:30:59</string>
+      </property>
+     </item>
+    </widget>
    </widget>
   </widget>
  </widget>
@@ -456,6 +552,38 @@ background-color: #1e1e1e;
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>preview</sender>
+   <signal>clicked()</signal>
+   <receiver>XViewerClass</receiver>
+   <slot>Preview()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>222</x>
+     <y>37</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>208</x>
+     <y>-35</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>playback</sender>
+   <signal>clicked()</signal>
+   <receiver>XViewerClass</receiver>
+   <slot>Playback()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>314</x>
+     <y>44</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>319</x>
+     <y>-31</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
   <slot>MaxWindow()</slot>
@@ -463,5 +591,7 @@ background-color: #1e1e1e;
   <slot>AddCam()</slot>
   <slot>SetCam()</slot>
   <slot>DelCam()</slot>
+  <slot>Preview()</slot>
+  <slot>Playback()</slot>
  </slots>
 </ui>

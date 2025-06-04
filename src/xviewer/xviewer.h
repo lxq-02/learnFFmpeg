@@ -53,6 +53,8 @@ public slots:
 
     void StartRecord(); // 开始全部摄像头录制
 	void StopRecord();  // 停止全部摄像头录制
+    void Preview();     // 预览
+    void Playback();    // 回放界面
 private:
     Ui::XViewerClass *ui;
     QMenu left_menu_;
