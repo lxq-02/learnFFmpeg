@@ -33,6 +33,10 @@ public:
 
     // 刷新左侧相机列表
     void RefreshCams();
+
+    // 编辑摄像机
+    void SetCam(int index);
+
 public slots:
     void MaxWindow();
     void NormalWindow();
@@ -41,6 +45,8 @@ public slots:
     void View9();
     void View16();
     void AddCam(); // 新增摄像机配置
+    void SetCam();
+    void DelCam();
 private:
     Ui::XViewerClass *ui;
     QMenu left_menu_;

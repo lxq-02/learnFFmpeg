@@ -274,6 +274,32 @@ background-color: #1e1e1e;
       <string>新增</string>
      </property>
     </widget>
+    <widget class="QPushButton" name="set_cam">
+     <property name="geometry">
+      <rect>
+       <x>70</x>
+       <y>5</y>
+       <width>50</width>
+       <height>30</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>修改</string>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="del_cam">
+     <property name="geometry">
+      <rect>
+       <x>140</x>
+       <y>5</y>
+       <width>50</width>
+       <height>30</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>删除</string>
+     </property>
+    </widget>
    </widget>
    <widget class="QWidget" name="cams" native="true">
     <property name="geometry">
@@ -372,10 +398,44 @@ background-color: #1e1e1e;
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>set_cam</sender>
+   <signal>clicked()</signal>
+   <receiver>XViewerClass</receiver>
+   <slot>SetCam()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>84</x>
+     <y>75</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>81</x>
+     <y>-85</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>del_cam</sender>
+   <signal>clicked()</signal>
+   <receiver>XViewerClass</receiver>
+   <slot>DelCam()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>154</x>
+     <y>71</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>151</x>
+     <y>-60</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
   <slot>MaxWindow()</slot>
   <slot>NormalWindow()</slot>
   <slot>AddCam()</slot>
+  <slot>SetCam()</slot>
+  <slot>DelCam()</slot>
  </slots>
 </ui>
