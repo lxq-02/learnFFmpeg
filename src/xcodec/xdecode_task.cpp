@@ -42,7 +42,7 @@ bool XDecodeTask::Open(AVCodecParameters* para)
 
 void XDecodeTask::Do(AVPacket* pkt)
 {
-	cout << "#" << endl;
+	cout << "#" << flush;
 	if (!pkt || pkt->stream_index != 0) // 判断是否是视频流
 	{
 		return;

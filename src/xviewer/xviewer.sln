@@ -1,9 +1,14 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
-VisualStudioVersion = 17.13.35931.197 d17.13
+VisualStudioVersion = 17.13.35931.197
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "xviewer", "xviewer.vcxproj", "{4BA2102C-AD25-45D8-8ED0-C4949A0CCCB4}"
+	ProjectSection(ProjectDependencies) = postProject
+		{BD8F9302-979F-4808-B93D-12DEBF53A031} = {BD8F9302-979F-4808-B93D-12DEBF53A031}
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "xcodec", "..\xcodec\xcodec.vcxproj", "{BD8F9302-979F-4808-B93D-12DEBF53A031}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +20,10 @@ Global
 		{4BA2102C-AD25-45D8-8ED0-C4949A0CCCB4}.Debug|x86.Build.0 = Debug|Win32
 		{4BA2102C-AD25-45D8-8ED0-C4949A0CCCB4}.Release|x86.ActiveCfg = Release|Win32
 		{4BA2102C-AD25-45D8-8ED0-C4949A0CCCB4}.Release|x86.Build.0 = Release|Win32
+		{BD8F9302-979F-4808-B93D-12DEBF53A031}.Debug|x86.ActiveCfg = Debug|Win32
+		{BD8F9302-979F-4808-B93D-12DEBF53A031}.Debug|x86.Build.0 = Debug|Win32
+		{BD8F9302-979F-4808-B93D-12DEBF53A031}.Release|x86.ActiveCfg = Release|Win32
+		{BD8F9302-979F-4808-B93D-12DEBF53A031}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

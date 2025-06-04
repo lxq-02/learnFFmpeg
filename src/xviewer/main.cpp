@@ -2,6 +2,7 @@
 #include <iostream>
 #include <QtWidgets/QApplication>
 #include <QDebug>
+#include <QDir>
 #include "xcamera_record.h"
 
 #include "xcamera_config.h"
@@ -12,9 +13,13 @@ using namespace std;
 
 int main(int argc, char *argv[])
 {
+    const char* save_path = "./video/0";
+    QDir dir;
+	dir.mkpath(save_path); // 确保目录存在
+
 	XCameraRecord xr;
     xr.set_rtsp_url("rtsp://127.0.0.1/test");
-	xr.set_save_path("./test_001.mp4");
+	xr.set_save_path(save_path);
     xr.Start();
 
 
@@ -78,5 +83,7 @@ int main(int argc, char *argv[])
     QApplication a(argc, argv);
     XViewer w;
     w.show();
-    return a.exec();
+    auto re = a.exec();
+    xr.Stop();
+    return re;
 }
