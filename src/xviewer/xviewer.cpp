@@ -12,6 +12,7 @@
 #include <QMessageBox>
 #include <sstream>
 #include "xcamera_config.h"
+#include "xcamera_widget.h"
 
 #define CAM_CONF_PATH "cams.db"
 
@@ -29,7 +30,7 @@ QString safeDecode(const char* s)
 }
 
 
-static QWidget* cam_wids[16] = { 0 };
+static XCameraWidget* cam_wids[16] = { 0 };
 
 
 XViewer::XViewer(QWidget *parent)
@@ -150,7 +151,7 @@ void XViewer::View(int count)
     {
         if (!cam_wids[i])
         {
-            cam_wids[i] = new QWidget();
+            cam_wids[i] = new XCameraWidget();
             cam_wids[i]->setStyleSheet("background-color:rgb(51,51,51);");
         }
         lay->addWidget(cam_wids[i], i/cols, i%cols);

@@ -106,12 +106,14 @@
     <QtUic Include="xviewer.ui" />
     <QtMoc Include="xviewer.h" />
     <ClCompile Include="xcamera_config.cpp" />
+    <ClCompile Include="xcamera_widget.cpp" />
     <ClCompile Include="xviewer.cpp" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="resource.h" />
     <ClInclude Include="xcamera_config.h" />
+    <QtMoc Include="xcamera_widget.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="xviewer.rc" />
