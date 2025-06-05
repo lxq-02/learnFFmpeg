@@ -10,6 +10,7 @@ class CXAudioPlay : public XAudioPlay
 public:
     bool Open(XAudioSpec& spec)
     {
+        this->spec_ = spec;
         // 退出上一次音频
 		SDL_QuitSubSystem(SDL_INIT_AUDIO);
 
@@ -55,7 +56,7 @@ public:
             }
             SDL_MixAudio(stream + mixed_size,
                 buf.data.data() + buf.offset,
-                size, SDL_MIX_MAXVOLUME);
+                size, volume_);
             need_size -= size; // 减去已处理的字节数
             mixed_size += size;
             buf.offset += size; // 更新偏移位置
@@ -66,6 +67,7 @@ public:
             }
         }
     }
+
 };
 
 XAudioPlay* XAudioPlay::Instance()

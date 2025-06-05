@@ -102,6 +102,19 @@ public:
 		audio_datas_.back().data.assign(data, data + size);
 	}
 
+	// 播放速度
+	virtual void SetSpeed(float s)
+	{
+		auto spec = spec_;
+		auto old_freq = spec.freq;
+		spec.freq *= s;
+		Open(spec);
+		spec_.freq = old_freq;
+	}
+
+	// 音量
+	void set_volume(int v) { volume_ = v; }
+
 protected:
 	XAudioPlay();
 	virtual void Callback(unsigned char* stream, int len) = 0;
@@ -112,5 +125,7 @@ protected:
 	}
 	std::list<XData> audio_datas_; // 音频缓冲列表
 	std::mutex mux_;
+	unsigned char volume_ = 128;	// 0~128音量
+	XAudioSpec spec_;
 };
 

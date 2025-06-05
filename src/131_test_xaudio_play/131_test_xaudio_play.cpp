@@ -16,6 +16,9 @@ int main()
 	ifstream ifs("test.pcm", ios::binary);
 	if (!ifs) return -1;
 	unsigned char buf[1024] = { 0 };
+	audio->set_volume(10);
+
+	audio->SetSpeed(0.5);
 	for (;;)
 	{
 		ifs.read((char*)buf, sizeof(buf));
@@ -25,6 +28,10 @@ int main()
 	}
 
 	getchar();
+	getchar();
+	audio->SetSpeed(2);
+	getchar();
+	audio->Close();
     return 0;
 }
 
