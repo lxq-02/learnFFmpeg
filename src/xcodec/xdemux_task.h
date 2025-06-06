@@ -11,6 +11,9 @@ enum XSYN_TYPE
 class XCODEC_API XDemuxTask : public XThread
 {
 public:
+	int audio_index() { return demux_.audio_index(); }	// 获取音频流索引
+	int video_index() { return demux_.video_index(); }	// 获取视频流索引
+
 	void Main();
 	/**
 	 * 打开解封装

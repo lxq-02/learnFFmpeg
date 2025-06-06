@@ -2,6 +2,11 @@
 #include <SDL.h>
 #include <iostream>
 
+extern "C"
+{
+#include <libavformat/avformat.h>
+}
+
 #pragma comment(lib, "SDL2.lib")
 using namespace std;
 
@@ -80,6 +85,65 @@ XAudioPlay* XAudioPlay::Instance()
 {
     static CXAudioPlay cx;
     return &cx;
+}
+
+bool XAudioPlay::Open(AVCodecParameters* para)
+{
+    XAudioSpec spec;
+    spec.channels = para->channels;
+	spec.freq = para->sample_rate;
+    switch (para->format)
+    {
+    case AV_SAMPLE_FMT_S16:
+    case AV_SAMPLE_FMT_S16P:
+		spec.format = AUDIO_S16;
+		break;
+	case AV_SAMPLE_FMT_S32:
+	case AV_SAMPLE_FMT_S32P:
+		spec.format = AUDIO_S32;
+		break;
+	case AV_SAMPLE_FMT_FLT:
+	case AV_SAMPLE_FMT_FLTP:
+		spec.format = AUDIO_F32;
+		break;
+    default:
+        break;
+    }
+    return Open(spec);
+}
+
+void XAudioPlay::Push(AVFrame* frame)
+{
+    if (!frame || !frame->data[0]) return;
+    vector<unsigned char> buf;
+    int sample_size = 4;
+    int channels = frame->channels;
+    unsigned char* L = frame->data[0];
+    unsigned char* R = frame->data[1];
+    unsigned char* data = nullptr;
+    // 暂时支持双通道
+    switch (frame->format)
+    {
+	//case AV_SAMPLE_FMT_S16P:
+	case AV_SAMPLE_FMT_S32P:
+	case AV_SAMPLE_FMT_FLTP:
+        buf.resize(frame->linesize[0]);
+        data = buf.data();
+        // LLLL RRRR
+        // LR LR LR LR 4
+
+        for (int i = 0; i < frame->nb_samples; i++)
+        {
+            memcpy(data + i * sample_size * channels, L + i * sample_size, sample_size);
+            memcpy(data + i * sample_size * channels + sample_size, R + i * sample_size, sample_size);
+        }
+		Push(data, frame->linesize[0]);
+        return;
+        break;
+    default:
+        break;
+    }
+	Push(frame->data[0], frame->linesize[0]);
 }
 
 XAudioPlay::XAudioPlay()

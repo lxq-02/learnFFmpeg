@@ -2,6 +2,7 @@
 #include <vector>
 #include <list>
 #include <mutex>
+#include "xtools.h"
 /**
  *  \name Audio flags
  */
@@ -87,14 +88,17 @@ struct XData
 /**
  * 音频播放 单例模式
  */
-class XAudioPlay
+class XCODEC_API XAudioPlay
 {
 public:
 	static XAudioPlay* Instance();
 
+
+	virtual bool Open(AVCodecParameters* para);
 	// 打开音频 开始播放 调用回调函数
 	virtual bool Open(XAudioSpec& spec) = 0;
 
+	virtual void Push(AVFrame* frame);
 	void Push(const unsigned char* data, int size)
 	{
 		std::unique_lock<std::mutex> lock(mux_);

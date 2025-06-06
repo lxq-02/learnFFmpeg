@@ -24,11 +24,18 @@ public:
 	// 返回结果需要用XFreeFrame()释放
 	AVFrame* GetFrame();
 
+	void set_stream_index(int i) { stream_index_ = i; }
+
+	void set_frame_cache(bool is) { frame_cache_ = is; }
+
 private:
+	int stream_index_ = 0;
 	std::mutex mtx_;	// 线程安全锁
 	XDecode decode_;
-	XAVPacketList pkt_list_; // AVPacket 列表，用于存储解码数据
-	AVFrame* frame_ = nullptr; // 解码后存储
-	bool need_view_ = false;	// 是否需要渲染，每帧只渲染一次，通过GetFrame()获取
+	XAVPacketList pkt_list_;		// AVPacket 列表，用于存储解码数据
+	AVFrame* frame_ = nullptr;		// 解码后存储
+	bool need_view_ = false;		// 是否需要渲染，每帧只渲染一次，通过GetFrame()获取
+	std::list<AVFrame*> frames_;	// 存储音频缓冲
+	bool frame_cache_ = false;		// 是否缓冲frame队列
 };
 

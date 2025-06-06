@@ -1,7 +1,7 @@
 #pragma once
 /*****************************************************************//**
  * \file   xformat.h
- * \brief  封装和解封装类
+ * \brief  上下文类
  * 
  * \author lxq
  * \date   May 2025
@@ -9,8 +9,6 @@
 #include <mutex>
 #include <iostream>
 #include "xtools.h"
-
-
 using namespace std;
 
 struct AVFormatContext;

@@ -17,8 +17,6 @@ static int TimeoutCallback(void* para)
 {
 	auto xf = (XFormat*)para;
 	if (xf->IsTimeout()) return 1;	// 超时退出Read
-	//cout << "TimeOutCallback" << endl;
-
 
 	return 0; // 正常阻塞
 }
