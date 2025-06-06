@@ -15,6 +15,13 @@ public:
 	int video_index() { return demux_.video_index(); }	// 获取视频流索引
 
 	void Main();
+
+	/**
+	 *	资源清理
+	 *
+	 */
+	void Stop();
+
 	/**
 	 * 打开解封装
 	 * 

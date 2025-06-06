@@ -506,7 +506,7 @@ void XViewer::PlayVideo(QModelIndex index)
     if (!item) return;
 	QString path = item->data(Qt::UserRole).toString();
     qDebug() << path;
-    static XPlayVideo play;
+    XPlayVideo play;
 	play.Open(path.toStdString().c_str());
-    play.show();
+    play.exec(); 
 }

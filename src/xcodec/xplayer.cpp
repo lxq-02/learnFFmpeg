@@ -62,12 +62,32 @@ bool XPlayer::Open(const char* url, void* winid)
     return true;
 }
 
+void XPlayer::Stop()
+{
+    XThread::Stop();
+    demux_.Stop();
+    audio_decode_.Stop();
+    video_decode_.Stop();
+    Wait();
+    demux_.Wait();
+    audio_decode_.Wait();
+    video_decode_.Wait();
+    if (view_)
+    {
+        view_->Close();
+        delete view_;
+        view_ = nullptr;
+    }
+    XAudioPlay::Instance()->Close();
+}
+
 void XPlayer::Main()
 {
     long long syn = 0;
 	XAudioPlay* au = XAudioPlay::Instance();
 	auto ap = demux_.CopyAudioPara();
     auto vp = demux_.CopyVideoPara();
+    if (!ap) return;
     while (!is_exit_)
     {
         syn = XRescale(au->cur_pts(), ap->time_base, vp->time_base);

@@ -77,6 +77,14 @@ void XThread::Stop()
 	ss << "XThread::Stop() begin " << index_;
 	LOGINFO(ss.str());
 	is_exit_ = true;
+
+
+
+}
+
+void XThread::Wait()
+{
+	stringstream ss;
 	if (th_.joinable()) // 判断子线程是否可以等待
 	{
 		th_.join();		// 等待子线程退出
@@ -84,8 +92,6 @@ void XThread::Stop()
 	ss.str("");
 	ss << "XThread::Stop() " << index_;
 	LOGINFO(ss.str());
-
-
 }
 
 XPara* XPara::Create()
@@ -159,4 +165,14 @@ int XAVPacketList::Size()
 {
 	unique_lock<mutex> lock(mtx_);
 	return pkts_.size();
+}
+
+void XAVPacketList::Clear()
+{
+	unique_lock<mutex> lock(mtx_);
+	while (!pkts_.empty())
+	{
+		av_packet_free(&pkts_.front());
+		pkts_.pop_front();
+	}
 }

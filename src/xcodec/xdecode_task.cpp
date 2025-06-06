@@ -43,6 +43,21 @@ bool XDecodeTask::Open(AVCodecParameters* para)
     return true;
 }
 
+void XDecodeTask::Stop()
+{
+	pkt_list_.Clear();
+
+	unique_lock<mutex> lock(mtx_);
+	decode_.set_context(nullptr);
+	is_open_ = false;
+
+	while (!frames_.empty())
+	{
+		av_frame_free(&frames_.front());
+		frames_.pop_front();
+	}
+}
+
 void XDecodeTask::Do(AVPacket* pkt)
 {
 	cout << "#" << flush;

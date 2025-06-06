@@ -18,6 +18,12 @@ public:
 	bool Open(const char* url, void* winid);
 
 	/**
+	 * 清理资源
+	 * 
+	 */
+	void Stop();
+
+	/**
 	 * 主线程 处理同步
 	 * 
 	 */

@@ -141,11 +141,17 @@ void XAudioPlay::Push(AVFrame* frame)
 {
     if (!frame || !frame->data[0]) return;
     vector<unsigned char> buf;
-    int sample_size = 4;
+    int sample_size = av_get_bytes_per_sample((AVSampleFormat)frame->format);
     int channels = frame->channels;
     unsigned char* L = frame->data[0];
     unsigned char* R = frame->data[1];
     unsigned char* data = nullptr;
+    if (channels == 1)
+    {
+        Push(frame->data[0], frame->nb_samples*sample_size, frame->pts);
+        return;
+    }
+
     // 暂时支持双通道
     switch (frame->format)
     {

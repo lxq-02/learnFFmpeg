@@ -40,6 +40,12 @@ void XDemuxTask::Main()
 	}
 }
 
+void XDemuxTask::Stop()
+{
+	XThread::Stop();
+	demux_.set_ctx(nullptr);
+}
+
 bool XDemuxTask::Open(std::string url, int timeout_ms)
 {
 	LOGDEBUG("XDemuxTask::Open begin!");

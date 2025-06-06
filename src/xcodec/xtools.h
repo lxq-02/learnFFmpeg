@@ -61,8 +61,11 @@ public:
 	// 启动线程
 	virtual void Start();
 
-	// 停止线程（设置退出标志，等待线程退出）
+	// 停止线程（设置退出标志）
 	virtual void Stop();
+
+	// 等待线程退出
+	virtual void Wait();
 
 	// 执行任务需要重载
 	virtual void Do(AVPacket* pkt) {}
@@ -131,6 +134,7 @@ public:
 	AVPacket* Pop();
 	void Push(AVPacket* pkt);
 	int Size();
+	void Clear();
 
 private:
 	std::list<AVPacket*> pkts_;		// AVPacket列表

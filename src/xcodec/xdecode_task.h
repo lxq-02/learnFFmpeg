@@ -12,6 +12,7 @@ public:
 	 * @return 
 	 */
 	bool Open(AVCodecParameters* para);
+	void Stop();
 
 	// 责任链处理函数
 	void Do(AVPacket* pkt) override;
@@ -32,6 +33,8 @@ public:
 	// 设置同步时间
 	void set_syn_pts(long long p) { syn_pts_ = p; }
 	void set_block_size(int s) { block_size_ = s; }
+
+
 private:
 	int block_size_ = 0;		    // 阻塞大小
 	long long syn_pts_ = -1;		// 同步时间 -1不同步
