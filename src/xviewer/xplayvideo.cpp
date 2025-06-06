@@ -1,4 +1,5 @@
 #include "xplayvideo.h"
+#include <QDebug>
 
 XPlayVideo::XPlayVideo(QDialog*parent)
 	: QDialog(parent)
@@ -14,7 +15,7 @@ XPlayVideo::~XPlayVideo()
 
 bool XPlayVideo::Open(const char* url)
 {
-	if (!player.Open(url, (void*)winId()))
+	if (!player.Open(url, (void*)ui.video->winId()))
 	{
 		return false;
 	}
@@ -78,4 +79,22 @@ void XPlayVideo::Close()
 void XPlayVideo::closeEvent(QCloseEvent* ev)
 {
 	Close();
+}
+
+void XPlayVideo::SetSpeed()
+{
+	float speed = 1;
+	int s = ui.speed->value();
+
+	if (s <= 10)
+	{
+		speed = (float)s / 10;
+	}
+	else
+	{
+		speed = s - 9;
+	}
+	ui.speedtxt->setText(QString::number(speed));
+
+	player.SetSpeed(speed);
 }

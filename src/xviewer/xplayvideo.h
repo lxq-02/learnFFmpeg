@@ -20,6 +20,9 @@ public:
 	void Close();
 	void closeEvent(QCloseEvent* ev) override;
 
+public:
+	void SetSpeed();
+
 private:
 	Ui::XPlayVideoClass ui;
 	XPlayer player;

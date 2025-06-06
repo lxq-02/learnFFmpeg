@@ -6,6 +6,7 @@
 #include "xcamera_record.h"
 
 #include "xcamera_config.h"
+#include "xplayvideo.h"
 using namespace std;
 
 #define TEST_CAM_PATH "test.db"
@@ -81,6 +82,9 @@ int main(int argc, char *argv[])
         qDebug() << cam.name_;
     }*/
     QApplication a(argc, argv);
+    XPlayVideo pv;
+    pv.Open("v1080.mp4");
+    pv.exec();
     XViewer w;
     w.show();
     auto re = a.exec();

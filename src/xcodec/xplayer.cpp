@@ -135,3 +135,8 @@ void XPlayer::Update()
     au->Push(f);
     XFreeFrame(&f);
 }
+
+void XPlayer::SetSpeed(float s)
+{
+    XAudioPlay::Instance()->SetSpeed(s);
+}

@@ -7,6 +7,7 @@
 
 class XCODEC_API XPlayer : public XThread
 {
+
 public:
 	/**
 	 * 打开音视频，初始化播放和渲染
@@ -47,6 +48,8 @@ public:
 	 * 
 	 */
 	void Update();
+
+	void SetSpeed(float s);
 
 protected:
 	XDemuxTask demux_;				// 解封装
