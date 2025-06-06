@@ -27,8 +27,9 @@ public:
 	void set_stream_index(int i) { stream_index_ = i; }
 
 	void set_frame_cache(bool is) { frame_cache_ = is; }
-
+	bool is_open() { return is_open_; }
 private:
+	bool is_open_ = false;
 	int stream_index_ = 0;
 	std::mutex mtx_;	// 线程安全锁
 	XDecode decode_;

@@ -54,6 +54,9 @@
     <ClInclude Include="xaudio_play.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="xplayer.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="xcodec.cpp">
@@ -93,6 +96,9 @@
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="xaudio_play.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="xplayer.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>
