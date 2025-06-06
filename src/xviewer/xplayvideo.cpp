@@ -6,6 +6,7 @@ XPlayVideo::XPlayVideo(QDialog*parent)
 {
 	ui.setupUi(this);
 	startTimer(10);
+	connect(ui.play, &QPushButton::clicked, this, &XPlayVideo::Pause); // 播放暂停
 }
 
 XPlayVideo::~XPlayVideo()
@@ -20,6 +21,8 @@ bool XPlayVideo::Open(const char* url)
 		return false;
 	}
 	player.Start();
+	player.Pause(false); // 播放状态
+	ui.play->setStyleSheet("background-image: url(:/XViewer/img/pause.png);");
 	startTimer(10);
 
 	//if (!demux_.Open(url)) // 解封装
@@ -102,4 +105,22 @@ void XPlayVideo::SetSpeed()
 	ui.speedtxt->setText(QString::number(speed));
 
 	player.SetSpeed(speed);
+}
+
+void XPlayVideo::PlayPos()
+{
+	player.Seek(ui.pos->value()); // 设置播放位置
+}
+
+void XPlayVideo::Pause()
+{
+	player.Pause(!player.is_pause());
+	if (player.is_pause())
+	{
+		ui.play->setStyleSheet("background-image: url(:/XViewer/img/play.png);");
+	}
+	else
+	{
+		ui.play->setStyleSheet("background-image: url(:/XViewer/img/pause.png);");
+	}
 }

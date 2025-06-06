@@ -18,7 +18,9 @@ public:
 	void Close();
 	void closeEvent(QCloseEvent* ev) override;
 public:
-	void SetSpeed();
+	void SetSpeed();	// 控制播放速度
+	void PlayPos();		// 控制播放进度
+	void Pause();		// 播放或者暂停
 
 private:
 	Ui::XPlayVideoClass ui;

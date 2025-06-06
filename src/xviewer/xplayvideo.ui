@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>605</width>
-    <height>398</height>
+    <height>396</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -80,9 +80,9 @@
   <widget class="QSlider" name="pos">
    <property name="geometry">
     <rect>
-     <x>-1</x>
+     <x>79</x>
      <y>370</y>
-     <width>601</width>
+     <width>521</width>
      <height>22</height>
     </rect>
    </property>
@@ -99,9 +99,35 @@
     <enum>Qt::Horizontal</enum>
    </property>
   </widget>
+  <widget class="QPushButton" name="play">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>330</y>
+     <width>64</width>
+     <height>64</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <kerning>false</kerning>
+    </font>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">background:transparent;
+background-image: url(:/XViewer/img/play.png);
+border:0px;
+</string>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+  </widget>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
- <resources/>
+ <resources>
+  <include location="xviewer.qrc"/>
+ </resources>
  <connections>
   <connection>
    <sender>speed</sender>
@@ -115,12 +141,46 @@
     </hint>
     <hint type="destinationlabel">
      <x>166</x>
-     <y>-64</y>
+     <y>0</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>pos</sender>
+   <signal>sliderReleased()</signal>
+   <receiver>XPlayVideoClass</receiver>
+   <slot>PlayPos()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>205</x>
+     <y>383</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>155</x>
+     <y>0</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>play</sender>
+   <signal>clicked()</signal>
+   <receiver>XPlayVideoClass</receiver>
+   <slot>Pause()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>45</x>
+     <y>368</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>26</x>
+     <y>-67</y>
     </hint>
    </hints>
   </connection>
  </connections>
  <slots>
   <slot>SetSpeed()</slot>
+  <slot>PlayPos()</slot>
+  <slot>Pause()</slot>
  </slots>
 </ui>

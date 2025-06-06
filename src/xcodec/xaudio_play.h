@@ -93,6 +93,8 @@ class XCODEC_API XAudioPlay
 public:
 	static XAudioPlay* Instance();
 
+	// 暂停
+	virtual void Pause(bool is_pause) = 0;
 
 	virtual bool Open(AVCodecParameters* para);
 	// 打开音频 开始播放 调用回调函数

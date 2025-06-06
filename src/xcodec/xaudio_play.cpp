@@ -13,6 +13,24 @@ using namespace std;
 class CXAudioPlay : public XAudioPlay
 {
 public:
+
+    // 暂停
+    void Pause(bool is_pause)
+    {
+        if (is_pause)
+        {
+            SDL_PauseAudio(1);
+			pause_begin = NowMs(); // 记录暂停开始的时间
+        }
+        else
+        {
+            // 去掉暂停的时间
+            if (pause_begin> 0)
+			    last_ms_ += (NowMs() - pause_begin); // 计算暂停的时间
+            SDL_PauseAudio(0);
+        }
+    }
+
     bool Open(XAudioSpec& spec)
     {
         this->spec_ = spec;
@@ -50,7 +68,7 @@ public:
         int mixed_size = 0;     // 已经处理的字节数
 		int need_size = len;    // 需要处理的字节数
         cur_pts_ = buf.pts;     // 当前播放的pts
-        las_ms_ = NowMs();
+        last_ms_ = NowMs();
 
         while (mixed_size < len)
         {
@@ -85,9 +103,9 @@ public:
 	long long cur_pts() override
 	{
         double ms = 0;
-		if (las_ms_ > 0)
+		if (last_ms_ > 0)
 		{
-			ms = NowMs() - las_ms_; // 当前时间戳 - 上次时间戳 ,距离上次写入缓冲的播放时间毫秒
+			ms = NowMs() - last_ms_; // 当前时间戳 - 上次时间戳 ,距离上次写入缓冲的播放时间毫秒
 		}
         // pts 毫秒换算为pts的时间基数
         if (time_base_ > 0)
@@ -95,8 +113,10 @@ public:
         return cur_pts_ + speed_ * ms;
 	}
 private:
-    long long cur_pts_ = 0;			// 当前播放位置
-    long long las_ms_ = 0;           // 上次的时间戳
+    long long cur_pts_ = 0;			    // 当前播放位置
+    long long last_ms_ = 0;              // 上次的时间戳
+	long long pause_begin = 0;          // 暂停开始的时间戳
+
 };
 
 XAudioPlay* XAudioPlay::Instance()

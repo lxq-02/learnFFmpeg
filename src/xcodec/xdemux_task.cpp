@@ -11,6 +11,11 @@ void XDemuxTask::Main()
 	AVPacket pkt;
 	while (!is_exit_)
 	{
+		if (is_pause())
+		{
+			MSleep(1);
+			continue;
+		}
 		if (!demux_.Read(&pkt))
 		{
 			// ∂¡»° ß∞‹

@@ -92,6 +92,12 @@ void XDecodeTask::Main()
 	long long cur_pts = -1; // 当前解码到的pts（以解码数据为准）
 	while (!is_exit_)
 	{
+		if (is_pause()) // 暂停
+		{
+			MSleep(1);
+			continue;
+		}
+
 		// 同步
 		while (!is_exit_)
 		{

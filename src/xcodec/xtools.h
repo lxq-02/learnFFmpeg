@@ -90,7 +90,10 @@ public:
 		std::unique_lock<std::mutex> lock(mtx_);
 		next_ = xt;
 	}
+	// 暂停或播放
+	virtual void Pause(bool is_pause) { is_pause_ = is_pause; }
 
+	bool is_pause() { return is_pause_; }
 protected:
 
 	// 线程入口函数
@@ -101,7 +104,10 @@ protected:
 	// 线程索引号
 	int index_ = 0;
 
+
+
 private:
+	bool is_pause_ = false;			// 是否是暂停状态
 	std::thread th_;
 	std::mutex mtx_;
 	XThread *next_ = nullptr;	// 责任链的下一个节点

@@ -88,6 +88,11 @@ void XPlayer::Main()
     video_decode_.set_time_base(vp->time_base);
     while (!is_exit_)
     {
+        if (is_pause())
+        {
+            MSleep(1);
+            continue;
+        }
         this->pos_ms_ = video_decode_.cur_ms();
         if (ap)
         {
@@ -142,3 +147,19 @@ void XPlayer::SetSpeed(float s)
 {
     XAudioPlay::Instance()->SetSpeed(s);
 }
+
+bool XPlayer::Seek(long long ms)
+{
+
+    return true;
+}
+
+void XPlayer::Pause(bool is_pause)
+{
+	XThread::Pause(is_pause);
+	demux_.Pause(is_pause);
+	audio_decode_.Pause(is_pause);
+	video_decode_.Pause(is_pause);
+    XAudioPlay::Instance()->Pause(is_pause);
+}
+
