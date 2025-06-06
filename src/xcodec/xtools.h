@@ -61,7 +61,10 @@ public:
 	// 启动线程
 	virtual void Start();
 
-	// 停止线程（设置退出标志）
+	// 设置线程退出标志
+	virtual void Exit();
+
+	// 停止线程 等待退出
 	virtual void Stop();
 
 	// 等待线程退出

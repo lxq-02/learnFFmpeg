@@ -62,10 +62,10 @@ bool XPlayer::Open(const char* url, void* winid)
 
 void XPlayer::Stop()
 {
-    XThread::Stop();
-    demux_.Stop();
-    audio_decode_.Stop();
-    video_decode_.Stop();
+    Exit();
+    demux_.Exit();
+    audio_decode_.Exit();
+    video_decode_.Exit();
     Wait();
     demux_.Wait();
     audio_decode_.Wait();

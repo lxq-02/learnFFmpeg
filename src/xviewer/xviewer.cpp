@@ -147,6 +147,10 @@ void XViewer::resizeEvent(QResizeEvent* ev)
     int x = width() - ui->head_button->width();
     int y = ui->head_button->y();
     ui->head_button->move(x, y);
+    auto psize = ui->playback_wid->size();
+    auto tsize = ui->time_list->size();
+	ui->time_list->resize(tsize.width(), psize.height());
+    ui->cal->resize(psize.width() - tsize.width(), psize.height());
 }
 
 void XViewer::contextMenuEvent(QContextMenuEvent* event)
@@ -207,6 +211,7 @@ void XViewer::RefreshCams()
 		auto item = new QListWidgetItem(QIcon(":/XViewer/img/cam.png"), C(cam.name_));
         ui->cam_list->addItem(item);
     }
+    c->Save(CAM_CONF_PATH); // 保存到文件
 }
 
 void XViewer::MaxWindow()
@@ -316,7 +321,7 @@ void XViewer::SetCam(int index)
 	{
 		c->Push(data);
 	}
-    c->Save(CAM_CONF_PATH); // 保存到文件
+
     RefreshCams();  // 刷新显示
 }
 

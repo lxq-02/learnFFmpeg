@@ -71,12 +71,18 @@ void XThread::Start()
 	LOGINFO(ss.str());
 }
 
-void XThread::Stop()
+void XThread::Exit()
 {
 	stringstream ss;
 	ss << "XThread::Stop() begin " << index_;
 	LOGINFO(ss.str());
 	is_exit_ = true;
+}
+
+void XThread::Stop()
+{
+	Exit();
+	Wait();
 }
 
 void XThread::Wait()
