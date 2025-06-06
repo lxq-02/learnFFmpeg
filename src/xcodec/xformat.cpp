@@ -75,6 +75,12 @@ std::shared_ptr<XPara> XFormat::CopyVideoPara()
 	re.reset(XPara::Create());
 	*re->time_base = ctx_->streams[index]->time_base; 
 	avcodec_parameters_copy(re->para, ctx_->streams[index]->codecpar); // 复制视频参数
+	
+	// 转换成毫秒
+	re->total_ms = av_rescale_q(ctx_->streams[index]->duration,
+		ctx_->streams[index]->time_base,
+		{ 1, 1000 }
+	);
 	return re;
 }
 
@@ -88,6 +94,11 @@ std::shared_ptr<XPara> XFormat::CopyAudioPara()
 	re.reset(XPara::Create());
 	*re->time_base = ctx_->streams[index]->time_base;
 	avcodec_parameters_copy(re->para, ctx_->streams[index]->codecpar); // 复制音频参数
+	// 转换成毫秒
+	re->total_ms = av_rescale_q(ctx_->streams[index]->duration,
+		ctx_->streams[index]->time_base,
+		{ 1, 1000 }
+	);
 	return re;
 }
 

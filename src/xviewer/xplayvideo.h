@@ -12,14 +12,11 @@ class XPlayVideo : public QDialog
 public:
 	XPlayVideo(QDialog*parent = nullptr);
 	~XPlayVideo();
-
 	bool Open(const char* url);
 
 	void timerEvent(QTimerEvent* ev) override;
-
 	void Close();
 	void closeEvent(QCloseEvent* ev) override;
-
 public:
 	void SetSpeed();
 

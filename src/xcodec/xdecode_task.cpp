@@ -50,6 +50,9 @@ void XDecodeTask::Stop()
 	unique_lock<mutex> lock(mtx_);
 	decode_.set_context(nullptr);
 	is_open_ = false;
+	if (time_base_)
+		delete time_base_;
+	time_base_ = nullptr;
 
 	while (!frames_.empty())
 	{
@@ -120,7 +123,17 @@ void XDecodeTask::Main()
 			{
 				cout << "@" << flush;
 				need_view_ = true; // 设置需要渲染
+
 				cur_pts = frame_->pts; // 获取当前解码的pts
+				// 转换成毫秒
+				if (time_base_)
+				{
+					cur_ms_ = av_rescale_q(frame_->pts,
+						*time_base_,
+						{ 1, 1000 }
+					);
+				}
+
 			}
 			if (frame_cache_)
 			{
@@ -164,4 +177,15 @@ AVFrame* XDecodeTask::GetFrame()
 	}
 	need_view_ = false;
 	return f;
+}
+
+void XDecodeTask::set_time_base(AVRational* time_base)
+{
+	if (!time_base) return;
+	unique_lock<mutex> lock(mtx_);
+	if (time_base_)
+		delete time_base_;
+	time_base_ = new AVRational();
+	time_base_->den = time_base->den;
+	time_base_->num = time_base->num;
 }

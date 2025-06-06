@@ -51,7 +51,15 @@ public:
 
 	void SetSpeed(float s);
 
+	// 总时长 毫秒
+	long long total_ms() { return total_ms_; }
+
+	// 当前播放的位置
+	long long pos_ms() { return pos_ms_; }
+
 protected:
+	long long total_ms_ = 0;
+	long long pos_ms_ = 0;
 	XDemuxTask demux_;				// 解封装
 	XDecodeTask audio_decode_;		// 音频解码
 	XDecodeTask video_decode_;		// 视频解码

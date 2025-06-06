@@ -85,6 +85,7 @@ int main(int argc, char *argv[])
     XPlayVideo pv;
     pv.Open("v1080.mp4");
     pv.exec();
+    return 0;
     XViewer w;
     w.show();
     auto re = a.exec();

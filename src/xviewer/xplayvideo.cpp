@@ -60,6 +60,11 @@ void XPlayVideo::timerEvent(QTimerEvent* ev)
 	//view_->DrawFrame(f);
 	//XFreeFrame(&f); // ÊÍ·ÅÖ¡ÄÚ´æ
 	player.Update();
+	auto pos = player.pos_ms();
+	auto total = player.total_ms();
+	ui.pos->setMaximum(total);
+
+	ui.pos->setValue(pos);
 }
 
 void XPlayVideo::Close()

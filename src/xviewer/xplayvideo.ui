@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>605</width>
-    <height>397</height>
+    <height>398</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -75,6 +75,28 @@
    </property>
    <property name="text">
     <string>1</string>
+   </property>
+  </widget>
+  <widget class="QSlider" name="pos">
+   <property name="geometry">
+    <rect>
+     <x>-1</x>
+     <y>370</y>
+     <width>601</width>
+     <height>22</height>
+    </rect>
+   </property>
+   <property name="minimum">
+    <number>1</number>
+   </property>
+   <property name="maximum">
+    <number>999</number>
+   </property>
+   <property name="pageStep">
+    <number>100</number>
+   </property>
+   <property name="orientation">
+    <enum>Qt::Horizontal</enum>
    </property>
   </widget>
  </widget>

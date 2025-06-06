@@ -11,6 +11,9 @@ bool XPlayer::Open(const char* url, void* winid)
     auto vp = demux_.CopyVideoPara();
     if (vp)
     {
+        // 视频总时长
+        this->total_ms_ = vp->total_ms;
+
         if (!video_decode_.Open(vp->para))
         {
             return false;
@@ -46,11 +49,6 @@ bool XPlayer::Open(const char* url, void* winid)
 
         // 初始化音频播放
 		XAudioPlay::Instance()->Open(*ap);
-
-        // 设置时间基数
-        double time_base = 0;
-        
-
     }
     else
     {
@@ -87,12 +85,16 @@ void XPlayer::Main()
 	XAudioPlay* au = XAudioPlay::Instance();
 	auto ap = demux_.CopyAudioPara();
     auto vp = demux_.CopyVideoPara();
-    if (!ap) return;
+    video_decode_.set_time_base(vp->time_base);
     while (!is_exit_)
     {
-        syn = XRescale(au->cur_pts(), ap->time_base, vp->time_base);
-        audio_decode_.set_syn_pts(au->cur_pts() + 10000);
-        video_decode_.set_syn_pts(syn);
+        this->pos_ms_ = video_decode_.cur_ms();
+        if (ap)
+        {
+            syn = XRescale(au->cur_pts(), ap->time_base, vp->time_base);
+            audio_decode_.set_syn_pts(au->cur_pts() + 10000);
+            video_decode_.set_syn_pts(syn);
+        }
         MSleep(1);
     }
 }
@@ -112,7 +114,7 @@ void XPlayer::Start()
         video_decode_.Start();
     if (audio_decode_.is_open())
 	    audio_decode_.Start();
-    //XThread::Start();
+    XThread::Start();
 }
 
 void XPlayer::Update()
