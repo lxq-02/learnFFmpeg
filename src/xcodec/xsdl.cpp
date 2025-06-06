@@ -137,7 +137,7 @@ bool XSDL::Init(int w, int h, Format fmt)
         return false;
     }
 
-    return false;
+    return true;
 }
 
 bool XSDL::Draw(const unsigned char* data, int linesize)

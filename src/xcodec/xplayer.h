@@ -9,7 +9,7 @@ class XCODEC_API XPlayer : public XThread
 {
 public:
 	/**
-	 * 
+	 * 打开音视频，初始化播放和渲染
 	 * 
 	 * @param url
 	 * @param winid 窗口句柄
@@ -18,18 +18,29 @@ public:
 	bool Open(const char* url, void* winid);
 
 	/**
-	 * 入口函数
+	 * 主线程 处理同步
 	 * 
 	 */
 	void Main();
 
+	/**
+	 * 回调接收音视频包
+	 * 
+	 * @param pkt
+	 */
 	void Do(AVPacket* pkt) override;
 
 	/**
-	 * 启动接口
+	 * 开启 解封装 音视频解码 和 处理同步的线程
 	 * 
 	 */
 	void Start();
+
+	/**
+	 * 渲染视频 播放音频
+	 * 
+	 */
+	void Update();
 
 protected:
 	XDemuxTask demux_;				// 解封装

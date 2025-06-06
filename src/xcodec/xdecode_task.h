@@ -28,7 +28,13 @@ public:
 
 	void set_frame_cache(bool is) { frame_cache_ = is; }
 	bool is_open() { return is_open_; }
+
+	// 设置同步时间
+	void set_syn_pts(long long p) { syn_pts_ = p; }
+	void set_block_size(int s) { block_size_ = s; }
 private:
+	int block_size_ = 0;		    // 阻塞大小
+	long long syn_pts_ = -1;		// 同步时间 -1不同步
 	bool is_open_ = false;
 	int stream_index_ = 0;
 	std::mutex mtx_;	// 线程安全锁

@@ -17,6 +17,8 @@ bool XPlayer::Open(const char* url, void* winid)
         }
         // 用于过滤音频包
         video_decode_.set_stream_index(demux_.video_index());
+        // 缓冲
+        video_decode_.set_block_size(100);
         // 视频渲染
         if (!view_)
             view_ = XVideoView::Create();
@@ -33,11 +35,21 @@ bool XPlayer::Open(const char* url, void* winid)
 		{
 			return false;
 		}
+        // 缓冲
+		audio_decode_.set_block_size(100); // 缓冲大小
+
 		// 用于过滤视频包
         audio_decode_.set_stream_index(demux_.audio_index());
 
+        // frame 缓冲
+        audio_decode_.set_frame_cache(true);
+
         // 初始化音频播放
-		XAudioPlay::Instance()->Open(ap->para);
+		XAudioPlay::Instance()->Open(*ap);
+
+        // 设置时间基数
+        double time_base = 0;
+        
 
     }
     else
@@ -47,12 +59,22 @@ bool XPlayer::Open(const char* url, void* winid)
 
     // 解封装数据传到当前类
     demux_.set_next(this);
-    return false;
+    return true;
 }
 
 void XPlayer::Main()
 {
-
+    long long syn = 0;
+	XAudioPlay* au = XAudioPlay::Instance();
+	auto ap = demux_.CopyAudioPara();
+    auto vp = demux_.CopyVideoPara();
+    while (!is_exit_)
+    {
+        syn = XRescale(au->cur_pts(), ap->time_base, vp->time_base);
+        audio_decode_.set_syn_pts(au->cur_pts() + 10000);
+        video_decode_.set_syn_pts(syn);
+        MSleep(1);
+    }
 }
 
 void XPlayer::Do(AVPacket* pkt)
@@ -70,5 +92,26 @@ void XPlayer::Start()
         video_decode_.Start();
     if (audio_decode_.is_open())
 	    audio_decode_.Start();
-    XThread::Start();
+    //XThread::Start();
+}
+
+void XPlayer::Update()
+{
+    // 渲染视频
+	if (view_)
+	{
+		auto f = video_decode_.GetFrame();
+		if (f)
+		{
+			view_->DrawFrame(f);
+			XFreeFrame(&f); // 释放 AVFrame 内存
+		}
+	}
+
+    // 音频播放
+    auto au = XAudioPlay::Instance();
+    auto f = audio_decode_.GetFrame();
+    if (!f) return;
+    au->Push(f);
+    XFreeFrame(&f);
 }

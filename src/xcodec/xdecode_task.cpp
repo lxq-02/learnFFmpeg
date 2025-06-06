@@ -51,6 +51,16 @@ void XDecodeTask::Do(AVPacket* pkt)
 		return;
 	}
 	pkt_list_.Push(pkt); // 将 AVPacket 添加到列表中
+	if (block_size_ <= 0) return;
+	while (!is_exit_)
+	{
+		if (pkt_list_.Size() > block_size_)
+		{
+			MSleep(1);
+			continue;
+		}
+		break;
+	}
 }
 
 void XDecodeTask::Main()
@@ -61,9 +71,20 @@ void XDecodeTask::Main()
 			frame_ = av_frame_alloc(); // 分配 AVFrame 内存
 	}
 
-
+	long long cur_pts = -1; // 当前解码到的pts（以解码数据为准）
 	while (!is_exit_)
 	{
+		// 同步
+		while (!is_exit_)
+		{
+			if (syn_pts_ >= 0 && cur_pts > syn_pts_)
+			{
+				MSleep(1);
+				continue;
+			}
+			break;
+		}
+
 		auto pkt = pkt_list_.Pop(); // 从列表中获取 AVPacket
 		if (!pkt)
 		{
@@ -84,6 +105,7 @@ void XDecodeTask::Main()
 			{
 				cout << "@" << flush;
 				need_view_ = true; // 设置需要渲染
+				cur_pts = frame_->pts; // 获取当前解码的pts
 			}
 			if (frame_cache_)
 			{

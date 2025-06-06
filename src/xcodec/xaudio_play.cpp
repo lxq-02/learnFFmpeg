@@ -49,6 +49,8 @@ public:
 		// 2 buf小于stream缓冲 拼接
         int mixed_size = 0;     // 已经处理的字节数
 		int need_size = len;    // 需要处理的字节数
+        cur_pts_ = buf.pts;     // 当前播放的pts
+        las_ms_ = NowMs();
 
         while (mixed_size < len)
         {
@@ -79,6 +81,22 @@ public:
         SDL_QuitSubSystem(SDL_INIT_AUDIO);
         audio_datas_.clear();
     }
+
+	long long cur_pts() override
+	{
+        double ms = 0;
+		if (las_ms_ > 0)
+		{
+			ms = NowMs() - las_ms_; // 当前时间戳 - 上次时间戳 ,距离上次写入缓冲的播放时间毫秒
+		}
+        // pts 毫秒换算为pts的时间基数
+        if (time_base_ > 0)
+            ms = ms / (double)1000 / (double)time_base_;
+        return cur_pts_ + ms;
+	}
+private:
+    long long cur_pts_ = 0;			// 当前播放位置
+    long long las_ms_ = 0;           // 上次的时间戳
 };
 
 XAudioPlay* XAudioPlay::Instance()
@@ -112,6 +130,13 @@ bool XAudioPlay::Open(AVCodecParameters* para)
     return Open(spec);
 }
 
+bool XAudioPlay::Open(XPara& para)
+{
+    if (para.time_base->num > 0)
+	    time_base_ = (double)para.time_base->den / (double)para.time_base->num; // 计算时间基数
+    return Open(para.para);
+}
+
 void XAudioPlay::Push(AVFrame* frame)
 {
     if (!frame || !frame->data[0]) return;
@@ -137,13 +162,13 @@ void XAudioPlay::Push(AVFrame* frame)
             memcpy(data + i * sample_size * channels, L + i * sample_size, sample_size);
             memcpy(data + i * sample_size * channels + sample_size, R + i * sample_size, sample_size);
         }
-		Push(data, frame->linesize[0]);
+		Push(data, frame->linesize[0], frame->pts);
         return;
         break;
     default:
         break;
     }
-	Push(frame->data[0], frame->linesize[0]);
+	Push(frame->data[0], frame->linesize[0], frame->pts);
 }
 
 XAudioPlay::XAudioPlay()

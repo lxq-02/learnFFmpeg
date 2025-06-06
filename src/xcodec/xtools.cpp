@@ -6,6 +6,8 @@ using namespace std;
 extern "C"
 {
 #include <libavformat/avformat.h>
+#include <libavutil/rational.h>
+#include <libavcodec/avcodec.h>
 }
 
 #pragma comment(lib, "avformat.lib")
@@ -47,6 +49,11 @@ void PrintErr(int err)
 	char buf[1024] = { 0 };
 	av_strerror(err, buf, sizeof(buf) - 1);
 	cerr << buf << endl;
+}
+
+long long XRescale(long long pts, AVRational* src_time_base, AVRational* dst_time_base)
+{
+	return av_rescale_q(pts, *src_time_base, *dst_time_base);
 }
 
 
@@ -123,6 +130,8 @@ void XAVPacketList::Push(AVPacket* pkt)
 	auto p = av_packet_alloc();
 	av_packet_ref(p, pkt); // 引用计数，减少数据复制，线程安全
 	pkts_.push_back(p); // 添加到列表中
+
+
 	// 超出最大空间，清理数据，到关键帧位置
 	if (pkts_.size() > max_packets_)
 	{
@@ -144,4 +153,10 @@ void XAVPacketList::Push(AVPacket* pkt)
 			pkts_.pop_front();	// 出队
 		}
 	}
+}
+
+int XAVPacketList::Size()
+{
+	unique_lock<mutex> lock(mtx_);
+	return pkts_.size();
 }
