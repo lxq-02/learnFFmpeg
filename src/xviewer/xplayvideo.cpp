@@ -5,8 +5,10 @@ XPlayVideo::XPlayVideo(QDialog*parent)
 	: QDialog(parent)
 {
 	ui.setupUi(this);
-	startTimer(10);
+	//startTimer(10);
 	connect(ui.play, &QPushButton::clicked, this, &XPlayVideo::Pause); // 播放暂停
+	connect(ui.pos, &QSlider::sliderReleased, this, &XPlayVideo::PlayPos); // 进度条松开
+	connect(ui.pos, &QSlider::sliderMoved, this, &XPlayVideo::Move); // 进度条拖动
 }
 
 XPlayVideo::~XPlayVideo()
@@ -22,7 +24,7 @@ bool XPlayVideo::Open(const char* url)
 	}
 	player.Start();
 	player.Pause(false); // 播放状态
-	ui.play->setStyleSheet("background-image: url(:/XViewer/img/pause.png);");
+	//ui.play->setStyleSheet("background-image: url(:/XViewer/img/pause.png);");
 	startTimer(10);
 
 	//if (!demux_.Open(url)) // 解封装
@@ -57,17 +59,30 @@ bool XPlayVideo::Open(const char* url)
 
 void XPlayVideo::timerEvent(QTimerEvent* ev)
 {
+	if (player.is_pause())
+	{
+		ui.play->setStyleSheet("background-image: url(:/XViewer/img/play.png);");
+	}
+	else
+	{
+		ui.play->setStyleSheet("background-image: url(:/XViewer/img/pause.png);");
+	}
+
+	if (player.is_pause()) return;
+	player.Update();
+	auto pos = player.pos_ms();
+	auto total = player.total_ms();
+	ui.pos->setMaximum(total);
+	ui.pos->setValue(pos);
+
+
 	//if (!view_) return; // 如果没有视图则不渲染
 	//auto f = decode_.GetFrame();
 	//if (!f) return;
 	//view_->DrawFrame(f);
 	//XFreeFrame(&f); // 释放帧内存
-	player.Update();
-	auto pos = player.pos_ms();
-	auto total = player.total_ms();
-	ui.pos->setMaximum(total);
 
-	ui.pos->setValue(pos);
+
 }
 
 void XPlayVideo::Close()
@@ -110,17 +125,15 @@ void XPlayVideo::SetSpeed()
 void XPlayVideo::PlayPos()
 {
 	player.Seek(ui.pos->value()); // 设置播放位置
+	player.Pause(false);
 }
 
 void XPlayVideo::Pause()
 {
 	player.Pause(!player.is_pause());
-	if (player.is_pause())
-	{
-		ui.play->setStyleSheet("background-image: url(:/XViewer/img/play.png);");
-	}
-	else
-	{
-		ui.play->setStyleSheet("background-image: url(:/XViewer/img/pause.png);");
-	}
+}
+
+void XPlayVideo::Move()
+{
+	player.Pause(true);
 }

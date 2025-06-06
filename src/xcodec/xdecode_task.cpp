@@ -89,7 +89,6 @@ void XDecodeTask::Main()
 			frame_ = av_frame_alloc(); // 分配 AVFrame 内存
 	}
 
-	long long cur_pts = -1; // 当前解码到的pts（以解码数据为准）
 	while (!is_exit_)
 	{
 		if (is_pause()) // 暂停
@@ -101,7 +100,7 @@ void XDecodeTask::Main()
 		// 同步
 		while (!is_exit_)
 		{
-			if (syn_pts_ >= 0 && cur_pts > syn_pts_)
+			if (syn_pts_ >= 0 && cur_pts_ > syn_pts_)
 			{
 				MSleep(1);
 				continue;
@@ -130,7 +129,7 @@ void XDecodeTask::Main()
 				cout << "@" << flush;
 				need_view_ = true; // 设置需要渲染
 
-				cur_pts = frame_->pts; // 获取当前解码的pts
+				cur_pts_ = frame_->pts; // 获取当前解码的pts
 				// 转换成毫秒
 				if (time_base_)
 				{
@@ -194,4 +193,18 @@ void XDecodeTask::set_time_base(AVRational* time_base)
 	time_base_ = new AVRational();
 	time_base_->den = time_base->den;
 	time_base_->num = time_base->num;
+}
+
+void XDecodeTask::Clear()
+{
+	pkt_list_.Clear(); // 清空 AVPacket 列表
+
+	unique_lock<mutex> lock(mtx_);
+	while (!frames_.empty())
+	{
+		av_frame_free(&frames_.front());
+		frames_.pop_front();
+	}
+	cur_ms_ = -1;
+	decode_.Clear();
 }

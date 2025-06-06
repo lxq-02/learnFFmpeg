@@ -177,10 +177,27 @@ border:0px;
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>pos</sender>
+   <signal>sliderMoved(int)</signal>
+   <receiver>XPlayVideoClass</receiver>
+   <slot>Move()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>293</x>
+     <y>376</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>315</x>
+     <y>-65</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
   <slot>SetSpeed()</slot>
   <slot>PlayPos()</slot>
   <slot>Pause()</slot>
+  <slot>Move()</slot>
  </slots>
 </ui>

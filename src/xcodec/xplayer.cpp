@@ -130,7 +130,7 @@ void XPlayer::Update()
 		auto f = video_decode_.GetFrame();
 		if (f)
 		{
-			view_->DrawFrame(f);
+            view_->DrawFrame(f);
 			XFreeFrame(&f); // ÊÍ·Å AVFrame ÄÚ´æ
 		}
 	}
@@ -150,7 +150,10 @@ void XPlayer::SetSpeed(float s)
 
 bool XPlayer::Seek(long long ms)
 {
-
+    demux_.Seek(ms);
+    audio_decode_.Clear();
+    video_decode_.Clear();
+    XAudioPlay::Instance()->Clear();
     return true;
 }
 

@@ -96,8 +96,11 @@ public:
     void Close()
     {
         unique_lock<mutex> lock(mux_);
-        SDL_QuitSubSystem(SDL_INIT_AUDIO);
+        //SDL_QuitSubSystem(SDL_INIT_AUDIO);
         audio_datas_.clear();
+		cur_pts_ = 0; // 清除当前播放位置
+		last_ms_ = 0; // 清除上次时间戳
+		pause_begin = 0; // 清除暂停开始时间
     }
 
 	long long cur_pts() override

@@ -6,6 +6,14 @@ extern "C"
 #include <libavformat/avformat.h>
 }
 
+bool XDemuxTask::Seek(long long ms)
+{
+	auto vp = demux_.CopyVideoPara();
+	if (!vp) return false;
+	auto pts = av_rescale_q(ms, {1, 1000}, *vp->time_base);
+	return demux_.Seek(pts, video_index());
+}
+
 void XDemuxTask::Main()
 {
 	AVPacket pkt;

@@ -9,44 +9,21 @@ class XCODEC_API XPlayer : public XThread
 {
 
 public:
-	/**
-	 * 打开音视频，初始化播放和渲染
-	 * 
-	 * @param url
-	 * @param winid 窗口句柄
-	 * @return 
-	 */
+	// 打开音视频，初始化播放和渲染
 	bool Open(const char* url, void* winid);
-
-	/**
-	 * 清理资源
-	 * 
-	 */
+	// 清理资源
 	void Stop();
 
-	/**
-	 * 主线程 处理同步
-	 * 
-	 */
+	// 主线程 处理同步
 	void Main();
 
-	/**
-	 * 回调接收音视频包
-	 * 
-	 * @param pkt
-	 */
+	// 回调接收音视频包
 	void Do(AVPacket* pkt) override;
 
-	/**
-	 * 开启 解封装 音视频解码 和 处理同步的线程
-	 * 
-	 */
+	// 开启 解封装 音视频解码 和 处理同步的线程
 	void Start();
 
-	/**
-	 * 渲染视频 播放音频
-	 * 
-	 */
+	// 渲染视频 播放音频
 	void Update();
 
 	void SetSpeed(float s);

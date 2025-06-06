@@ -101,6 +101,11 @@ public:
 	virtual bool Open(XAudioSpec& spec) = 0;
 	virtual bool Open(XPara& para);
 	virtual void Close() = 0;
+	virtual void Clear()
+	{
+		Close();
+		SetSpeed(speed_);
+	}
 
 	/**
 	 * 获取当前的播放位置.

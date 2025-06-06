@@ -47,6 +47,8 @@ public:
 	 */
 	AVFrame* CreateFrame();
 
+	virtual void Clear();
+
 protected:
 	AVCodecContext* ctx_ = nullptr; // 编码上下文
 	std::mutex mtx_;				// 编码线程互斥锁

@@ -77,9 +77,6 @@ void XThread::Stop()
 	ss << "XThread::Stop() begin " << index_;
 	LOGINFO(ss.str());
 	is_exit_ = true;
-
-
-
 }
 
 void XThread::Wait()
